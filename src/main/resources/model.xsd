@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:model="urn:model.network.baev.ifmo.ru"
+            targetNamespace="urn:model.network.baev.ifmo.ru"
+            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+            xmlns:itn="http://jaxb2-commons.dev.java.net/basic/inheritance"
+            jaxb:extensionBindingPrefixes="itn"
+            jaxb:version="2.1"
+        >
+
+    <xsd:element name="client-auth" type="model:client-auth"/>
+    <xsd:complexType name="client-auth">
+        <xsd:attribute name="pass" type="xsd:string"/>
+        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="token" type="xsd:string"/>
+        <xsd:attribute name="friends-token" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <!--<xsd:element name="client-data" type="model:client-data"/>-->
+    <!--<xsd:complexType name="client-data">-->
+        <!--<xsd:sequence>-->
+            <!--<xsd:element name="description" type="model:client-description"/>-->
+        <!--</xsd:sequence>-->
+        <!--<xsd:attribute name="uid" type="xsd:string"/>-->
+        <!--<xsd:attribute name="token" type="xsd:string"/>-->
+        <!--<xsd:attribute name="friends-token" type="xsd:string"/>-->
+    <!--</xsd:complexType>-->
+
+
+    <xsd:element name="client-description" type="model:client-description"/>
+    <xsd:complexType name="client-description">
+        <xsd:attribute name="nick" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="friend-address" type="model:friend-address"/>
+    <xsd:complexType name="friend-address">
+        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="address" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="friend-info" type="model:friend-info"/>
+    <xsd:complexType name="friend-info">
+        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="status" type="model:client-status"/>
+        <xsd:attribute name="friend-token" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="client-info" type="model:client-info"/>
+    <xsd:complexType name="client-info">
+        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="address" type="xsd:string"/>
+        <xsd:attribute name="status" type="model:client-status"/>
+    </xsd:complexType>
+
+
+    <xsd:simpleType name="client-status">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="online"/>
+            <xsd:enumeration value="offline"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:element name="abstract-login-successfully" type="model:abstract-login-successfully"/>
+    <xsd:complexType name="abstract-login-successfully" abstract="true">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="token" type="xsd:string"/>
+        <xsd:attribute name="friends-token" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="abstract-login-request" type="model:abstract-login-request"/>
+    <xsd:complexType name="abstract-login-request" abstract="true">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:attribute name="login" type="xsd:string"/>
+        <xsd:attribute name="pass" type="xsd:string"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="abstract-alive-notification" type="model:abstract-alive-notification"/>
+    <xsd:complexType name="abstract-alive-notification" abstract="true">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:attribute name="uid" type="xsd:string"/>
+    </xsd:complexType>
+</xsd:schema>
