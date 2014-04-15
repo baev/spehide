@@ -1,7 +1,6 @@
 package ru.ifmo.baev.network.ui;
 
 import ru.ifmo.baev.network.client.Client;
-import ru.ifmo.baev.network.client.ClientData;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import javax.swing.*;
@@ -100,6 +99,14 @@ public class ClientView extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
         return panel;
+    }
+
+    public void updateFriendsList() {
+        listModel.setSize(0);
+        for (String uid : client.getData().friends.keySet()) {
+            FriendInfo info = client.getData().friends.get(uid);
+            addFriend(listModel, info);
+        }
     }
 
     private void addFriend(DefaultListModel<String> listModel, FriendInfo info) {

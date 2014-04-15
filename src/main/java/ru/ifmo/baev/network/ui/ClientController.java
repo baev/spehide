@@ -1,6 +1,8 @@
 package ru.ifmo.baev.network.ui;
 
 import ru.ifmo.baev.network.client.Client;
+import ru.ifmo.baev.network.model.ClientStatus;
+import ru.ifmo.baev.network.model.FriendInfo;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,7 +21,7 @@ public class ClientController {
 
     private final ClientView view;
 
-    public ClientController(Client client, final ClientView view) {
+    public ClientController(final Client client, final ClientView view) {
         this.client = client;
         this.view = view;
 
@@ -40,8 +42,13 @@ public class ClientController {
                 String friendsToken = panel.getFriendsTokenField().getText();
 
                 if (option == JOptionPane.OK_OPTION && !uid.isEmpty() && !friendsToken.isEmpty()) {
+                    client.getData().friends.put(uid, new FriendInfo()
+                                    .withUid(uid)
+                                    .withFriendToken(friendsToken)
+                                    .withStatus(ClientStatus.UNKNOWN)
+                    );
                     System.out.println(uid + ": " + friendsToken);
-
+                    view.updateFriendsList();
                 }
             }
         });
@@ -78,6 +85,16 @@ public class ClientController {
                 System.out.println(Arrays.toString(view.getContactList().getSelectedIndices()));
             }
         });
+
+
+        Timer timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.updateFriendsList();
+
+            }
+        });
+        timer.start();
     }
 
 }
