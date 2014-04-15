@@ -53,7 +53,15 @@ public final class Utils {
         return Charset.forName(UTF_8);
     }
 
-    public static byte[] getBytesFromString(String s) {
+    public static byte[] getBytesFrom(String s) {
         return orderBytes(s.getBytes(getCharset()));
+    }
+
+    public static long longFromBytes(byte[] bytes) {
+        long value = 0;
+        for (byte b : bytes) {
+            value = (value << 8) + (b & 0xff);
+        }
+        return value;
     }
 }

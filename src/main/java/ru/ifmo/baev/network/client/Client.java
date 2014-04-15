@@ -5,7 +5,6 @@ import ru.ifmo.baev.network.MessageProcessor;
 import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.LoginRequest;
 import ru.ifmo.baev.network.message.MessageContainer;
-import ru.ifmo.baev.network.model.ClientStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import java.io.IOException;
@@ -75,7 +74,6 @@ public class Client {
         data.friends.put(uid, new FriendInfo()
                         .withUid(uid)
                         .withFriendToken(friendToken)
-                        .withStatus(ClientStatus.OFFLINE)
         );
     }
 
@@ -87,4 +85,7 @@ public class Client {
         return data.friends;
     }
 
+    public ClientData getData() {
+        return data;
+    }
 }

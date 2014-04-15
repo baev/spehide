@@ -19,11 +19,7 @@ public class LoginTask extends Task<LoginRequest> {
     private static final Object LOCK = new Object();
 
     public LoginTask(LoginRequest message, InetAddress address) {
-        this(new MessageContainer<>(message, address));
-    }
-
-    protected LoginTask(MessageContainer<LoginRequest> container) {
-        super(container);
+        super(message, address);
     }
 
     @Override

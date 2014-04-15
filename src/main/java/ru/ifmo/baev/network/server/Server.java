@@ -46,6 +46,7 @@ public class Server {
         logger.info("Server started");
         running = true;
         processors.add(new ServerTCPReceiver(tasks));
+        processors.add(new ServerUDPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new ServerSender(outgoing));
 

@@ -25,9 +25,9 @@ public class LoginSuccessfully extends AbstractLoginSuccessfully {
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
         byteBuffer.put((byte) 's');
-        byteBuffer.put(Utils.getBytesFromString(uid));
-        byteBuffer.put(Utils.getBytesFromString(token));
-        byteBuffer.put(Utils.getBytesFromString(friendsToken));
+        byteBuffer.put(Utils.getBytesFrom(uid));
+        byteBuffer.put(Utils.getBytesFrom(token));
+        byteBuffer.put(Utils.getBytesFrom(friendsToken));
         return byteBuffer.array();
     }
 
