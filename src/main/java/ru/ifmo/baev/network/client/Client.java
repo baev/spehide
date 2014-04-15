@@ -3,13 +3,14 @@ package ru.ifmo.baev.network.client;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.MessageProcessor;
 import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.message.LoginRequest;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.model.ClientStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
-import ru.ifmo.baev.network.server.ServerSender;
-import ru.ifmo.baev.network.server.ServerTCPReceiver;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +37,25 @@ public class Client {
 
     private boolean running = false;
 
+    public void login(String server, String login, String pass) throws UnknownHostException {
+        LoginRequest request = new LoginRequest();
+        request.setLogin(login);
+        request.setPass(pass);
+        outgoing.add(new MessageContainer<>(request, InetAddress.getByName(server)));
+    }
+
     public void start() throws IOException {
         if (running) {
             return;
         }
         running = true;
-        processors.add(new ServerTCPReceiver(tasks));
+        processors.add(new ClientTCPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
-        processors.add(new ServerSender(outgoing));
+        processors.add(new ClientSender(outgoing));
 
         for (AbstractProcessor processor : processors) {
             new Thread(processor).start();
+            processor.start();
         }
     }
 

@@ -7,6 +7,7 @@ import ru.ifmo.baev.network.message.LoginSuccessfully;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.model.ClientAuth;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 /**
@@ -17,7 +18,7 @@ public class LoginTask extends Task<LoginRequest> {
 
     private static final Object LOCK = new Object();
 
-    public LoginTask(LoginRequest message, String address) {
+    public LoginTask(LoginRequest message, InetAddress address) {
         this(new MessageContainer<>(message, address));
     }
 
@@ -34,7 +35,7 @@ public class LoginTask extends Task<LoginRequest> {
         ServerData data = (ServerData) d;
         String login = getContainer().getMessage().getLogin();
         String pass = getContainer().getMessage().getPass();
-        String address = getContainer().getAddress();
+        InetAddress address = getContainer().getAddress();
 
         if (data.getAuthData().containsKey(login)) {
             ClientAuth clientAuth = data.getAuthData().get(login);
@@ -52,7 +53,7 @@ public class LoginTask extends Task<LoginRequest> {
         }
     }
 
-    private MessageContainer loginSuccessfully(String address, ClientAuth auth) {
+    private MessageContainer loginSuccessfully(InetAddress address, ClientAuth auth) {
         LoginSuccessfully message = new LoginSuccessfully();
         message.setUid(auth.getUid());
         message.setToken(auth.getToken());
@@ -63,6 +64,7 @@ public class LoginTask extends Task<LoginRequest> {
     private ClientAuth createClientAuthData(String pass) {
         return new ClientAuth()
                 .withPass(pass)
+                .withToken(UUID.randomUUID().toString())
                 .withFriendsToken(UUID.randomUUID().toString())
                 .withUid(UUID.randomUUID().toString());
     }

@@ -1,5 +1,7 @@
 package ru.ifmo.baev.network.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.MessageProcessor;
 import ru.ifmo.baev.network.Task;
@@ -16,6 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *         Date: 13.04.14
  */
 public class Server {
+
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private ServerData data;
 
@@ -39,6 +43,7 @@ public class Server {
         if (running) {
             return;
         }
+        logger.info("Server started");
         running = true;
         processors.add(new ServerTCPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
@@ -46,6 +51,7 @@ public class Server {
 
         for (AbstractProcessor processor : processors) {
             new Thread(processor).start();
+            processor.start();
         }
     }
 
@@ -59,12 +65,13 @@ public class Server {
         }
         processors.clear();
         running = false;
+        logger.info("Server finished...");
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = new Server();
         server.start();
-        Thread.sleep(2000);
+        Thread.sleep(300000);
         server.stop();
     }
 }

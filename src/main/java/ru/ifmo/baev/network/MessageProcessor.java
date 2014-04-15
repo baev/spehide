@@ -35,7 +35,10 @@ public class MessageProcessor<T extends Data> extends AbstractProcessor {
                 }
 
                 Task task = tasks.poll();
-                outgoing.add(task.process(data));
+                MessageContainer message = task.process(data);
+                if (message != null) {
+                    outgoing.add(message);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

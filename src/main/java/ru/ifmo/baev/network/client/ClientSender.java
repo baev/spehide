@@ -1,4 +1,4 @@
-package ru.ifmo.baev.network.server;
+package ru.ifmo.baev.network.client;
 
 import ru.ifmo.baev.network.AbstractTCPSender;
 import ru.ifmo.baev.network.VOIPConfig;
@@ -8,14 +8,14 @@ import java.util.Queue;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
- *         Date: 13.04.14
+ *         Date: 15.04.14
  */
-public class ServerSender extends AbstractTCPSender {
+public class ClientSender extends AbstractTCPSender {
     private final int port;
 
-    public ServerSender(Queue<MessageContainer> outgoing) {
+    public ClientSender(Queue<MessageContainer> outgoing) {
         super(outgoing);
-        port = new VOIPConfig().getClientTCPPort();
+        port = new VOIPConfig().getServerTCPPort();
     }
 
     @Override

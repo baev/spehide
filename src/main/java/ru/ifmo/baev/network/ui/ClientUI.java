@@ -1,18 +1,13 @@
 package ru.ifmo.baev.network.ui;
 
-import org.apache.commons.io.IOUtils;
-import ru.ifmo.baev.network.Utils;
-import ru.ifmo.baev.network.VOIPConfig;
 import ru.ifmo.baev.network.client.Client;
-import ru.ifmo.baev.network.message.LoginRequest;
-import ru.ifmo.baev.network.model.ClientData;
+import ru.ifmo.baev.network.client.ClientData;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class ClientUI extends JFrame {
@@ -27,14 +22,13 @@ public class ClientUI extends JFrame {
 
     private java.util.List<String> names = Arrays.asList("vasya", "petya", "kolya", "swith");
 
-    private Client client;
-
     public ClientUI() {
         super(FRAME_NAME);
 
         JTextField loginField = new JTextField();
         JTextField passField = new JTextField();
         JTextField serverField = new JTextField();
+        serverField.setText("localhost");
         JPanel panel = createLoginPanel(serverField, loginField, passField);
 
         int option = JOptionPane.showConfirmDialog(null, panel, "Auth", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -46,9 +40,11 @@ public class ClientUI extends JFrame {
         }
 
         try {
-            ClientData data = login(server, login, pass);
-            client = new Client(data);
-        } catch (Exception e) {
+            Client client = new Client(new ClientData());
+            client.login(server, login, pass);
+            client.start();
+
+        } catch (IOException e) {
             e.printStackTrace();
             return;
         }
@@ -63,24 +59,6 @@ public class ClientUI extends JFrame {
         setLocationRelativeTo(null);
 
         setVisible(true);
-    }
-
-    public ClientData login(String server, String login, String pass) throws Exception {
-        VOIPConfig config = new VOIPConfig();
-        Socket to = new Socket(server, config.getServerTCPPort());
-        LoginRequest request = new LoginRequest();
-        request.setLogin(login);
-        request.setPass(Utils.sha256String(pass));
-        to.getOutputStream().write(request.toBytes());
-        to.close();
-
-        ClientData data = new ClientData();
-
-        ServerSocket mySocket = new ServerSocket(config.getClientTCPPort());
-        Socket from = mySocket.accept();
-        byte[] bytes = IOUtils.toByteArray(from.getInputStream());
-
-        return data;
     }
 
     public JPanel createMainPanel() {

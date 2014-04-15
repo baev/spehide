@@ -13,4 +13,10 @@ public class AliveNotification extends AbstractAliveNotification {
     public byte[] toBytes() {
         return uid.getBytes(Charset.forName("UTF-8"));
     }
+
+    public static AliveNotification fromBytes(byte[] bytes) {
+        AliveNotification message = new AliveNotification();
+        message.setUid(new String(bytes));
+        return message;
+    }
 }

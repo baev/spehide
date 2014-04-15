@@ -1,12 +1,14 @@
 package ru.ifmo.baev.network.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractTCPReceiver;
 import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.VOIPConfig;
 import ru.ifmo.baev.network.message.LoginRequest;
-import ru.ifmo.baev.network.message.MessageFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Queue;
 
 /**
@@ -15,11 +17,14 @@ import java.util.Queue;
  */
 public class ServerTCPReceiver extends AbstractTCPReceiver {
 
+    private final Logger logger = LogManager.getLogger(getClass());
+
     private final int port;
 
     public ServerTCPReceiver(Queue<Task> tasks) throws IOException {
         super(tasks);
         this.port = new VOIPConfig().getServerTCPPort();
+        logger.info("Server TCP port " + port);
     }
 
     @Override
@@ -28,11 +33,11 @@ public class ServerTCPReceiver extends AbstractTCPReceiver {
     }
 
     @Override
-    public void process(byte[] received, String from) {
+    public void process(byte[] received, InetAddress from) {
         char messageType = (char) received[0];
         switch (messageType) {
             case 'l':
-                LoginRequest message = MessageFactory.createLoginRequest(received);
+                LoginRequest message = LoginRequest.fromBytes(received);
                 addTask(new LoginTask(message, from));
                 break;
             case 'o':

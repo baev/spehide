@@ -1,8 +1,11 @@
 package ru.ifmo.baev.network;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Queue;
@@ -13,25 +16,32 @@ import java.util.Queue;
  */
 public abstract class AbstractTCPReceiver extends AbstractProcessor {
 
-    private final ServerSocket serverSocket;
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private final Queue<Task> tasks;
 
     public AbstractTCPReceiver(Queue<Task> tasks) throws IOException {
         this.tasks = tasks;
-        this.serverSocket = new ServerSocket(getPort());
     }
 
     @Override
     public void run() {
         while (isRunning()) {
             try {
+                ServerSocket serverSocket = new ServerSocket(getPort());
                 Socket socket = serverSocket.accept();
-                String address = socket.getInetAddress().toString();
+                InetAddress address = socket.getInetAddress();
+
+                logger.info(String.format(
+                        "%s receive message from %s",
+                        getClass().getSimpleName(),
+                        address
+                ));
 
                 byte[] bytes = IOUtils.toByteArray(socket.getInputStream());
                 process(bytes, address);
                 socket.close();
+                serverSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,14 +51,10 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
 
     public abstract int getPort();
 
-    public abstract void process(byte[] received, String from);
+    public abstract void process(byte[] received, InetAddress from);
 
     public void addTask(Task task) {
         getTasks().add(task);
-    }
-
-    public ServerSocket getServerSocket() {
-        return serverSocket;
     }
 
     public Queue<Task> getTasks() {

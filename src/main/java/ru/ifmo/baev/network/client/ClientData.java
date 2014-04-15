@@ -17,4 +17,11 @@ public class ClientData implements Data {
 
     public final Map<String, FriendInfo> friends = new HashMap<>();
 
+    public String uid;
+
+    public String token;
+
+    public String friendsToken;
+
+    public boolean authorized = false;
 }

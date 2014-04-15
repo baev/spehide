@@ -28,4 +28,20 @@ public class LoginRequest extends AbstractLoginRequest {
         return byteBuffer.array();
     }
 
+    public static LoginRequest fromBytes(byte[] bytes) {
+        LoginRequest message = new LoginRequest();
+        message.setLogin(getLogin(bytes));
+        message.setPass(getPass(bytes));
+        return message;
+    }
+
+    private static String getLogin(byte[] bytes) {
+        byte[] login = Utils.getBytes(bytes, PREFIX_SIZE, LOGIN_SIZE);
+        return new String(login);
+    }
+
+    private static String getPass(byte[] bytes) {
+        byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + LOGIN_SIZE, PASS_SIZE);
+        return new String(pass);
+    }
 }
