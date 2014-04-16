@@ -32,6 +32,7 @@ public class AuthCompletedTask extends Task<LoginSuccessfully> {
         clientData.token = getContainer().getMessage().getToken();
         clientData.friendsToken = getContainer().getMessage().getFriendsToken();
         clientData.authorized = true;
+        clientData.servers.add(getContainer().getAddress());
         logger.info("Client auth completed successfully");
         return null;
     }

@@ -45,6 +45,9 @@ public class VOIPConfig {
     @Property("client.tcp.port")
     private int clientTCPPort = 6576;
 
+    @Property("client.alive.notify.delay")
+    private long clientAliveNotifyDelay = 60;
+
     public int getAudioSampleRate() {
         return audioSampleRate;
     }
@@ -105,5 +108,9 @@ public class VOIPConfig {
 
     public int getClientTCPPort() {
         return clientTCPPort;
+    }
+
+    public long getClientAliveNotifyDelay() {
+        return clientAliveNotifyDelay;
     }
 }

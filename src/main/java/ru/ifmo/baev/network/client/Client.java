@@ -51,6 +51,7 @@ public class Client {
         processors.add(new ClientTCPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new ClientSender(outgoing));
+        processors.add(new AliveNotifier(data));
 
         for (AbstractProcessor processor : processors) {
             new Thread(processor).start();

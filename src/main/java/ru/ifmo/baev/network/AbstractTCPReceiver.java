@@ -33,7 +33,7 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
                 InetAddress address = socket.getInetAddress();
 
                 logger.info(String.format(
-                        "%s receive message from %s",
+                        "%s receive tcp message from %s",
                         getClass().getSimpleName(),
                         address
                 ));

@@ -4,8 +4,11 @@ import ru.ifmo.baev.network.Data;
 import ru.ifmo.baev.network.model.FriendAddress;
 import ru.ifmo.baev.network.model.FriendInfo;
 
+import java.net.InetAddress;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -24,4 +27,6 @@ public class ClientData implements Data {
     public String friendsToken;
 
     public boolean authorized = false;
+
+    public Set<InetAddress> servers = new HashSet<>();
 }
