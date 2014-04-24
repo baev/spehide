@@ -1,7 +1,7 @@
 package ru.ifmo.baev.network.server;
 
 import ru.ifmo.baev.network.AbstractTCPSender;
-import ru.ifmo.baev.network.VOIPConfig;
+import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.message.MessageContainer;
 
 import java.util.Queue;
@@ -15,7 +15,7 @@ public class ServerSender extends AbstractTCPSender {
 
     public ServerSender(Queue<MessageContainer> outgoing) {
         super(outgoing);
-        port = new VOIPConfig().getClientTCPPort();
+        port = new Config().getClientTCPPort();
     }
 
     @Override

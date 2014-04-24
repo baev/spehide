@@ -5,14 +5,12 @@ import ru.ifmo.baev.network.MessageProcessor;
 import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.LoginRequest;
 import ru.ifmo.baev.network.message.MessageContainer;
-import ru.ifmo.baev.network.model.FriendInfo;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -69,21 +67,6 @@ public class Client {
         }
         processors.clear();
         running = false;
-    }
-
-    public void addFriend(String uid, String friendToken) {
-        data.friends.put(uid, new FriendInfo()
-                        .withUid(uid)
-                        .withFriendToken(friendToken)
-        );
-    }
-
-    public void removeFriend(String uid) {
-        data.friends.remove(uid);
-    }
-
-    public Map<String, FriendInfo> getFriends() {
-        return data.friends;
     }
 
     public ClientData getData() {

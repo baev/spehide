@@ -39,6 +39,8 @@ public class ClientView extends JFrame {
 
     private LoginPanel loginPanel = new LoginPanel();
 
+    private JTextArea publicKey;
+
     public ClientView(Client client) {
         super(FRAME_NAME);
         this.client = client;
@@ -49,17 +51,18 @@ public class ClientView extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        publicKey = createPublicKey();
         callButton = createCallButton();
         deleteButton = createDeleteButton();
         addButton = createAddButton();
         buttonsPanel = createButtonsPanel();
         listModel = createListModel();
-        contactList = new JList<>(listModel);
+        contactList = createContactList();
         scrollPane = new JScrollPane(contactList);
         mainPanel = createMainPanel();
 
         getContentPane().add(mainPanel);
-        setPreferredSize(new Dimension(260, 220));
+        setPreferredSize(new Dimension(340, 400));
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -96,21 +99,43 @@ public class ClientView extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.add(publicKey, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
         return panel;
     }
 
     public void updateFriendsList() {
+        int[] selected = contactList.getSelectedIndices();
         listModel.setSize(0);
         for (String uid : client.getData().friends.keySet()) {
             FriendInfo info = client.getData().friends.get(uid);
             addFriend(listModel, info);
         }
+        contactList.setSelectedIndices(selected);
+    }
+
+    public void updatePublicKey() {
+        if (client.getData().authorized) {
+            String current = publicKey.getText();
+            if (!current.contains(client.getData().friendsToken)) {
+                publicKey.setText(String.format(
+                        "online\nuid: %s\nkey: %s",
+                        client.getData().uid,
+                        client.getData().friendsToken
+                ));
+            }
+        }
     }
 
     private void addFriend(DefaultListModel<String> listModel, FriendInfo info) {
-        listModel.addElement(String.format("%s: %s", info.getStatus(), info.getUid()));
+        listModel.addElement(String.format("%s: %s", info.getStatus(), info.getLogin()));
+    }
+
+    private JList<String> createContactList() {
+        JList<String> list = new JList<>(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        return list;
     }
 
     private DefaultListModel<String> createListModel() {
@@ -121,6 +146,15 @@ public class ClientView extends JFrame {
             addFriend(listModel, info);
         }
         return listModel;
+    }
+
+    public JTextArea createPublicKey() {
+        JTextArea pane = new JTextArea();
+        pane.setText("offline");
+        pane.setEditable(false);
+        pane.setBorder(null);
+        pane.setBackground(null);
+        return pane;
     }
 
     public JPanel createButtonsPanel() {
@@ -186,24 +220,24 @@ public class ClientView extends JFrame {
     }
 
     public class AddFriendPanel {
-        private JTextField uidField = new JTextField();
-        private JTextField friendsTokenField = new JTextField();
+        private JTextField loginField = new JTextField();
+        private JTextField publicKeyField = new JTextField();
         private JPanel panel;
 
         public AddFriendPanel() {
             panel = new JPanel(new GridLayout(0, 1));
-            panel.add(new JLabel("User uid:"));
-            panel.add(uidField);
-            panel.add(new JLabel("User friend token:"));
-            panel.add(friendsTokenField);
+            panel.add(new JLabel("User login:"));
+            panel.add(loginField);
+            panel.add(new JLabel("User public key:"));
+            panel.add(publicKeyField);
         }
 
-        public JTextField getUidField() {
-            return uidField;
+        public JTextField getLoginField() {
+            return loginField;
         }
 
-        public JTextField getFriendsTokenField() {
-            return friendsTokenField;
+        public JTextField getPublicKeyField() {
+            return publicKeyField;
         }
 
         public JPanel getPanel() {

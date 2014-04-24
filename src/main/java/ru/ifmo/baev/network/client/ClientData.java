@@ -1,7 +1,6 @@
 package ru.ifmo.baev.network.client;
 
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.model.FriendAddress;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import java.net.InetAddress;
@@ -16,9 +15,9 @@ import java.util.Set;
  */
 public class ClientData implements Data {
 
-    public final Map<String, FriendAddress> addresses = new HashMap<>();
-
     public final Map<String, FriendInfo> friends = new HashMap<>();
+
+    public final Map<String, String> loginHashes = new HashMap<>();
 
     public String uid;
 

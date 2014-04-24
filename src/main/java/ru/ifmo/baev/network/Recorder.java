@@ -13,7 +13,7 @@ import java.util.Queue;
  */
 public class Recorder {
 
-    private final VOIPConfig config = new VOIPConfig();
+    private final Config config = new Config();
 
     private final TargetDataLine microphone;
 
@@ -70,7 +70,7 @@ public class Recorder {
     }
 
     public static void main(String[] args) throws LineUnavailableException, InterruptedException {
-        VOIPConfig config = new VOIPConfig();
+        Config config = new Config();
 
         Recorder recorder = new Recorder();
         recorder.start();

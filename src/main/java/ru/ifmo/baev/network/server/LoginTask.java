@@ -1,5 +1,7 @@
 package ru.ifmo.baev.network.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
 import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.LoginRequest;
@@ -15,6 +17,8 @@ import java.util.UUID;
  *         Date: 13.04.14
  */
 public class LoginTask extends Task<LoginRequest> {
+
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private static final Object LOCK = new Object();
 
@@ -43,6 +47,12 @@ public class LoginTask extends Task<LoginRequest> {
         } else {
             ClientAuth clientAuth = createClientAuthData(pass);
             synchronized (LOCK) {
+                logger.info(String.format(
+                        "Added new auth data login: %s, uid: %s, public key: %s",
+                        login,
+                        clientAuth.getUid(),
+                        clientAuth.getFriendsToken()
+                ));
                 data.getAuthData().put(login, clientAuth);
             }
             return loginSuccessfully(address, clientAuth);

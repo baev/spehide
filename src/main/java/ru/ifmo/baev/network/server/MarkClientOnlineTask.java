@@ -22,7 +22,7 @@ public class MarkClientOnlineTask extends Task<AliveNotification> {
     @Override
     public MessageContainer process(Data data) throws Exception {
         if (!(data instanceof ServerData)) {
-            throw new Exception("Login failed");
+            throw new Exception("Data should be instance of ServerData");
         }
 
         Map<String, ClientInfo> clients = ((ServerData) data).getClients();

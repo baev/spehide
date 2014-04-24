@@ -37,11 +37,11 @@ public class LoginRequest extends AbstractLoginRequest {
 
     private static String getLogin(byte[] bytes) {
         byte[] login = Utils.getBytes(bytes, PREFIX_SIZE, LOGIN_SIZE);
-        return new String(login);
+        return Utils.bytesToHexString(login);
     }
 
     private static String getPass(byte[] bytes) {
         byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + LOGIN_SIZE, PASS_SIZE);
-        return new String(pass);
+        return Utils.bytesToHexString(pass);
     }
 }

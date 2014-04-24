@@ -24,7 +24,7 @@ public class AliveNotification extends AbstractAliveNotification {
     @Override
     public byte[] toBytes() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.put((byte) 'a');
+        byteBuffer.put((byte) getPrefix());
         byteBuffer.put(Utils.getBytesFrom(uid));
         byteBuffer.put(Utils.getBytesFrom(token));
         byteBuffer.putLong(time);
@@ -33,24 +33,28 @@ public class AliveNotification extends AbstractAliveNotification {
 
     public static AliveNotification fromBytes(byte[] bytes) {
         AliveNotification message = new AliveNotification();
-        message.setUid(getUid(bytes));
-        message.setToken(getToken(bytes));
-        message.setTime(getTime(bytes));
+        message.setUid(getUidFromBytes(bytes));
+        message.setToken(getTokenFromBytes(bytes));
+        message.setTime(getTimeFromBytes(bytes));
         return message;
     }
 
-    private static String getUid(byte[] bytes) {
+    protected static String getUidFromBytes(byte[] bytes) {
         byte[] login = Utils.getBytes(bytes, PREFIX_SIZE, UID_SIZE);
         return new String(login);
     }
 
-    private static String getToken(byte[] bytes) {
+    protected static String getTokenFromBytes(byte[] bytes) {
         byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + UID_SIZE, TOKEN_SIZE);
         return new String(pass);
     }
 
-    private static Long getTime(byte[] bytes) {
+    protected static Long getTimeFromBytes(byte[] bytes) {
         byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + UID_SIZE + TOKEN_SIZE, TIME_SIZE);
         return Utils.longFromBytes(pass);
+    }
+
+    protected char getPrefix() {
+        return 'a';
     }
 }

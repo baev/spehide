@@ -38,17 +38,22 @@ public class ClientController {
                         JOptionPane.PLAIN_MESSAGE
                 );
 
-                String uid = panel.getUidField().getText();
-                String friendsToken = panel.getFriendsTokenField().getText();
+                String login = panel.getLoginField().getText();
+                String publicKey = panel.getPublicKeyField().getText();
 
-                if (option == JOptionPane.OK_OPTION && !uid.isEmpty() && !friendsToken.isEmpty()) {
-                    client.getData().friends.put(uid, new FriendInfo()
-                                    .withUid(uid)
-                                    .withFriendToken(friendsToken)
+                if (option == JOptionPane.OK_OPTION && !login.isEmpty() && !publicKey.isEmpty()) {
+                    client.getData().friends.put(login, new FriendInfo()
+                                    .withLogin(login)
+                                    .withFriendToken(publicKey)
                                     .withStatus(ClientStatus.UNKNOWN)
+                                    .withLastNotificationTime(System.currentTimeMillis())
                     );
-                    System.out.println(uid + ": " + friendsToken);
+
+                    System.out.println(login + ": " + publicKey);
                     view.updateFriendsList();
+
+                    panel.getLoginField().setText("");
+                    panel.getPublicKeyField().setText("");
                 }
             }
         });
@@ -62,7 +67,13 @@ public class ClientController {
                 ));
 
                 if (option == JOptionPane.OK_OPTION) {
-                    view.getListModel().remove(view.getContactList().getSelectedIndex());
+                    for (String uid : client.getData().friends.keySet()) {
+                        if (toDelete.contains(uid)) {
+                            client.getData().friends.remove(uid);
+                            view.getListModel().remove(view.getContactList().getSelectedIndex());
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -91,6 +102,7 @@ public class ClientController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.updateFriendsList();
+                view.updatePublicKey();
 
             }
         });

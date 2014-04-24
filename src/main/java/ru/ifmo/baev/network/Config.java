@@ -12,9 +12,9 @@ import javax.sound.sampled.AudioFormat;
  */
 @Resource.Classpath("voip.properties")
 @SuppressWarnings("all")
-public class VOIPConfig {
+public class Config {
 
-    public VOIPConfig() {
+    public Config() {
         PropertyLoader.populate(this);
     }
 
@@ -46,7 +46,10 @@ public class VOIPConfig {
     private int clientTCPPort = 6576;
 
     @Property("client.alive.notify.delay")
-    private long clientAliveNotifyDelay = 60;
+    private long clientAliveNotifyDelay = 10;
+
+    @Property("client.online.delay")
+    private long clientOnlineDelay = 60;
 
     public int getAudioSampleRate() {
         return audioSampleRate;
@@ -112,5 +115,9 @@ public class VOIPConfig {
 
     public long getClientAliveNotifyDelay() {
         return clientAliveNotifyDelay;
+    }
+
+    public long getClientOnlineDelay() {
+        return clientOnlineDelay;
     }
 }

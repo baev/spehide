@@ -35,18 +35,14 @@
     </xsd:complexType>
 
 
-    <xsd:element name="friend-address" type="model:friend-address"/>
-    <xsd:complexType name="friend-address">
-        <xsd:attribute name="uid" type="xsd:string"/>
-        <xsd:attribute name="address" type="xsd:string"/>
-    </xsd:complexType>
-
-
     <xsd:element name="friend-info" type="model:friend-info"/>
     <xsd:complexType name="friend-info">
-        <xsd:attribute name="uid" type="xsd:string"/>
+        <xsd:attribute name="server" type="xsd:string"/>
+        <xsd:attribute name="login" type="xsd:string"/>
         <xsd:attribute name="status" type="model:client-status"/>
         <xsd:attribute name="friend-token" type="xsd:string"/>
+        <xsd:attribute name="address" type="xsd:string"/>
+        <xsd:attribute name="last-notification-time" type="xsd:long"/>
     </xsd:complexType>
 
 
@@ -101,5 +97,32 @@
         <xsd:attribute name="uid" type="xsd:string"/>
         <xsd:attribute name="token" type="xsd:string"/>
         <xsd:attribute name="time" type="xsd:long"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="abstract-is-online" type="model:abstract-is-online"/>
+    <xsd:complexType name="abstract-is-online" abstract="true">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:attribute name="login" type="xsd:string"/>
+        <xsd:attribute name="key" type="xsd:string"/>
+        <xsd:attribute name="last-notification-time" type="xsd:long"/>
+    </xsd:complexType>
+
+
+    <xsd:element name="abstract-user-status-info" type="model:abstract-user-status-info"/>
+    <xsd:complexType name="abstract-user-status-info" abstract="true">
+        <xsd:annotation>
+            <xsd:appinfo>
+
+                <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:attribute name="login" type="xsd:string"/>
+        <xsd:attribute name="address" type="xsd:string"/>
+        <xsd:attribute name="last-notification-time" type="xsd:long"/>
     </xsd:complexType>
 </xsd:schema>

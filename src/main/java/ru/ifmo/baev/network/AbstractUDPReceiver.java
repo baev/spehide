@@ -42,12 +42,6 @@ public abstract class AbstractUDPReceiver extends AbstractProcessor {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedMessage, receivedMessage.length);
                 receiverSocket.receive(receivedPacket);
 
-                logger.info(String.format(
-                        "%s receive udp message from %s",
-                        getClass().getSimpleName(),
-                        receivedPacket.getAddress()
-                ));
-
                 process(receivedMessage, receivedPacket.getAddress());
             } catch (IOException e) {
                 logger.error("Error upd message receiving...", e);

@@ -3,8 +3,8 @@ package ru.ifmo.baev.network.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractTCPReceiver;
+import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.Task;
-import ru.ifmo.baev.network.VOIPConfig;
 import ru.ifmo.baev.network.message.LoginRequest;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ServerTCPReceiver extends AbstractTCPReceiver {
 
     public ServerTCPReceiver(Queue<Task> tasks) throws IOException {
         super(tasks);
-        this.port = new VOIPConfig().getServerTCPPort();
+        this.port = new Config().getServerTCPPort();
         logger.info("Server TCP port " + port);
     }
 
@@ -37,6 +37,7 @@ public class ServerTCPReceiver extends AbstractTCPReceiver {
         char messageType = (char) received[0];
         switch (messageType) {
             case 'l':
+                logger.info("Received TCP login request from " + from);
                 LoginRequest message = LoginRequest.fromBytes(received);
                 addTask(new LoginTask(message, from));
                 break;
