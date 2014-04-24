@@ -52,6 +52,8 @@ public class ClientVoiceSender extends AbstractProcessor {
                         container.getPort()
 
                 ));
+
+                logger.info("send frame");
             } catch (Exception e) {
                 e.printStackTrace();
             }

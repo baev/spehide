@@ -1,5 +1,7 @@
 package ru.ifmo.baev.network.client;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractVoiceProcessor;
 import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.message.MessageContainer;
@@ -14,6 +16,8 @@ import java.util.Queue;
  *         Date: 24.04.14
  */
 public class VoiceRecorder extends AbstractVoiceProcessor {
+
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private final Config config = new Config();
 
@@ -43,6 +47,7 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
         Voice voice = new Voice();
         voice.setNumber(counter++);
         voice.setFrame(bytes);
+        logger.info("read frame");
     }
 
     @Override
