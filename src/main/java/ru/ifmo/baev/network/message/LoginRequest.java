@@ -21,7 +21,8 @@ public class LoginRequest extends AbstractLoginRequest {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.put((byte) 'l');
+        byteBuffer.putChar(Prefix.LOGIN_REQUEST);
+
         byteBuffer.put(Utils.orderBytes(Utils.sha256(login)));
         byteBuffer.put(Utils.orderBytes(Utils.sha256(pass)));
 

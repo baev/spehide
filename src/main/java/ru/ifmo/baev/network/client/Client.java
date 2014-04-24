@@ -1,8 +1,10 @@
 package ru.ifmo.baev.network.client;
 
 import ru.ifmo.baev.network.AbstractProcessor;
+import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.MessageProcessor;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.task.Task;
+import ru.ifmo.baev.network.message.CallRequest;
 import ru.ifmo.baev.network.message.LoginRequest;
 import ru.ifmo.baev.network.message.MessageContainer;
 
@@ -19,6 +21,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *         Date: 13.04.14
  */
 public class Client {
+
+    private Config config = new Config();
 
     private ClientData data;
 
@@ -38,7 +42,20 @@ public class Client {
         LoginRequest request = new LoginRequest();
         request.setLogin(login);
         request.setPass(pass);
-        outgoing.add(new MessageContainer<>(request, InetAddress.getByName(server)));
+        outgoing.add(new MessageContainer<>(
+                request,
+                InetAddress.getByName(server),
+                config.getServerTCPPort()
+        ));
+    }
+
+    public void call(String address) throws UnknownHostException {
+        CallRequest request = new CallRequest();
+        outgoing.add(new MessageContainer<>(
+                request,
+                InetAddress.getByName(address),
+                config.getClientTCPPort()
+        ));
     }
 
     public void start() throws IOException {
@@ -47,13 +64,14 @@ public class Client {
         }
         running = true;
         processors.add(new ClientTCPReceiver(tasks));
+        processors.add(new ClientUDPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new ClientSender(outgoing));
         processors.add(new AliveNotifier(data));
 
         for (AbstractProcessor processor : processors) {
-            new Thread(processor).start();
             processor.start();
+            new Thread(processor).start();
         }
     }
 

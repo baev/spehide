@@ -1,10 +1,10 @@
-package ru.ifmo.baev.network.server;
+package ru.ifmo.baev.network.task;
 
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.AliveNotification;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.model.ClientInfo;
+import ru.ifmo.baev.network.server.ServerData;
 
 import java.net.InetAddress;
 import java.util.Map;
@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class MarkClientOnlineTask extends Task<AliveNotification> {
 
-    public MarkClientOnlineTask(AliveNotification message, InetAddress address) {
-        super(message, address);
+    public MarkClientOnlineTask(AliveNotification message, InetAddress address, int port) {
+        super(message, address, port);
     }
 
     @Override

@@ -1,5 +1,6 @@
-package ru.ifmo.baev.network;
+package ru.ifmo.baev.network.task;
 
+import ru.ifmo.baev.network.Data;
 import ru.ifmo.baev.network.message.Message;
 import ru.ifmo.baev.network.message.MessageContainer;
 
@@ -13,8 +14,8 @@ public abstract class Task<T extends Message> {
 
     private MessageContainer<T> container;
 
-    public Task(T message, InetAddress address) {
-        this.container = new MessageContainer<>(message, address);
+    public Task(T message, InetAddress address, int port) {
+        this.container = new MessageContainer<>(message, address, port);
     }
 
     public abstract MessageContainer process(Data data) throws Exception;

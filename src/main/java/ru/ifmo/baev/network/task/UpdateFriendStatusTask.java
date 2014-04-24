@@ -1,9 +1,10 @@
-package ru.ifmo.baev.network.client;
+package ru.ifmo.baev.network.task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.client.ClientData;
+import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.message.UserStatusInfo;
 import ru.ifmo.baev.network.model.ClientStatus;
@@ -19,8 +20,8 @@ public class UpdateFriendStatusTask extends Task<UserStatusInfo> {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    public UpdateFriendStatusTask(UserStatusInfo message, InetAddress address) {
-        super(message, address);
+    public UpdateFriendStatusTask(UserStatusInfo message, InetAddress address, int port) {
+        super(message, address, port);
     }
 
     @Override

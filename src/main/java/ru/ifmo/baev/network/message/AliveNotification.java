@@ -24,7 +24,7 @@ public class AliveNotification extends AbstractAliveNotification {
     @Override
     public byte[] toBytes() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.put((byte) getPrefix());
+        byteBuffer.putChar(Prefix.ALIVE);
         byteBuffer.put(Utils.getBytesFrom(uid));
         byteBuffer.put(Utils.getBytesFrom(token));
         byteBuffer.putLong(time);
@@ -54,7 +54,4 @@ public class AliveNotification extends AbstractAliveNotification {
         return Utils.longFromBytes(pass);
     }
 
-    protected char getPrefix() {
-        return 'a';
-    }
 }

@@ -1,14 +1,14 @@
-package ru.ifmo.baev.network.server;
+package ru.ifmo.baev.network.task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.IsUserOnline;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.message.UserStatusInfo;
 import ru.ifmo.baev.network.model.ClientAuth;
 import ru.ifmo.baev.network.model.ClientInfo;
+import ru.ifmo.baev.network.server.ServerData;
 
 import java.net.InetAddress;
 
@@ -20,8 +20,8 @@ public class IsClientOnlineTask extends Task<IsUserOnline> {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    public IsClientOnlineTask(IsUserOnline message, InetAddress address) {
-        super(message, address);
+    public IsClientOnlineTask(IsUserOnline message, InetAddress address, int port) {
+        super(message, address, port);
     }
 
     @Override
@@ -71,7 +71,11 @@ public class IsClientOnlineTask extends Task<IsUserOnline> {
         userStatusInfo.setLogin(login);
         userStatusInfo.setLastNotificationTime(clientInfo.getLastNotificationTime());
 
-        return new MessageContainer<>(userStatusInfo, getContainer().getAddress());
+        return new MessageContainer<>(
+                userStatusInfo,
+                getContainer().getAddress(),
+                getContainer().getPort()
+        );
     }
 
 }

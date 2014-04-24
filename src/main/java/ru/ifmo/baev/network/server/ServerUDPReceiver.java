@@ -4,12 +4,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractUDPReceiver;
 import ru.ifmo.baev.network.Config;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.AliveNotification;
 import ru.ifmo.baev.network.message.IsUserOnline;
+import ru.ifmo.baev.network.task.IsClientOnlineTask;
+import ru.ifmo.baev.network.task.MarkClientOnlineTask;
 
 import java.net.InetAddress;
 import java.util.Queue;
+
+import static ru.ifmo.baev.network.message.Prefix.ALIVE;
+import static ru.ifmo.baev.network.message.Prefix.IS_USER_ONLINE;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -27,18 +32,18 @@ public class ServerUDPReceiver extends AbstractUDPReceiver {
     }
 
     @Override
-    public void process(byte[] received, InetAddress from) {
+    public void process(byte[] received, InetAddress from, int port) {
         char messageType = (char) received[0];
         switch (messageType) {
-            case 'a':
+            case ALIVE:
                 logger.info("Received UDP alive notification from " + from);
                 AliveNotification aliveNotification = AliveNotification.fromBytes(received);
-                addTask(new MarkClientOnlineTask(aliveNotification, from));
+                addTask(new MarkClientOnlineTask(aliveNotification, from, port));
                 break;
-            case 'o':
+            case IS_USER_ONLINE:
                 logger.info("Received UDP is user online from " + from);
                 IsUserOnline isUserOnline = IsUserOnline.fromBytes(received);
-                addTask(new IsClientOnlineTask(isUserOnline, from));
+                addTask(new IsClientOnlineTask(isUserOnline, from, port));
                 break;
         }
     }

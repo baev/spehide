@@ -25,7 +25,7 @@ public class IsUserOnline extends AbstractIsOnline {
     @Override
     public byte[] toBytes() throws NoSuchAlgorithmException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.put((byte) getPrefix());
+        byteBuffer.putChar(Prefix.IS_USER_ONLINE);
         byteBuffer.put(Utils.orderBytes(Utils.sha256(login)));
         byteBuffer.put(Utils.getBytesFrom(key));
         byteBuffer.putLong(lastNotificationTime);
@@ -53,9 +53,5 @@ public class IsUserOnline extends AbstractIsOnline {
     protected static Long getTimeFromBytes(byte[] bytes) {
         byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + LOGIN_SIZE + KEY_SIZE, TIME_SIZE);
         return Utils.longFromBytes(pass);
-    }
-
-    protected char getPrefix() {
-        return 'o';
     }
 }

@@ -1,6 +1,7 @@
 package ru.ifmo.baev.network.ui;
 
 import ru.ifmo.baev.network.client.Client;
+import ru.ifmo.baev.network.model.CallStatus;
 import ru.ifmo.baev.network.model.ClientStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
 
@@ -9,7 +10,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.net.UnknownHostException;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -67,12 +68,10 @@ public class ClientController {
                 ));
 
                 if (option == JOptionPane.OK_OPTION) {
-                    for (String uid : client.getData().friends.keySet()) {
-                        if (toDelete.contains(uid)) {
-                            client.getData().friends.remove(uid);
-                            view.getListModel().remove(view.getContactList().getSelectedIndex());
-                            break;
-                        }
+                    String uid = getSelectedUserUid();
+                    if (uid != null) {
+                        client.getData().friends.remove(uid);
+                        view.getListModel().remove(view.getContactList().getSelectedIndex());
                     }
                 }
             }
@@ -93,7 +92,27 @@ public class ClientController {
         view.getCallButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(Arrays.toString(view.getContactList().getSelectedIndices()));
+                client.getData().callStatus = CallStatus.REQUEST;
+                String uid = getSelectedUserUid();
+                if (uid == null) {
+                    return;
+                }
+
+                FriendInfo info = client.getData().friends.get(uid);
+                if (info == null) {
+                    return;
+                }
+
+                String address = info.getAddress();
+                if (address == null) {
+                    return;
+                }
+
+                try {
+                    client.call(address);
+                } catch (UnknownHostException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
@@ -109,4 +128,13 @@ public class ClientController {
         timer.start();
     }
 
+    private String getSelectedUserUid() {
+        String toDelete = (String) view.getContactList().getSelectedValue();
+        for (String uid : client.getData().friends.keySet()) {
+            if (toDelete.contains(uid)) {
+                return uid;
+            }
+        }
+        return null;
+    }
 }

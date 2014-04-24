@@ -4,12 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractTCPReceiver;
 import ru.ifmo.baev.network.Config;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.LoginRequest;
+import ru.ifmo.baev.network.task.LoginTask;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Queue;
+
+import static ru.ifmo.baev.network.message.Prefix.LOGIN_REQUEST;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -33,15 +36,13 @@ public class ServerTCPReceiver extends AbstractTCPReceiver {
     }
 
     @Override
-    public void process(byte[] received, InetAddress from) {
+    public void process(byte[] received, InetAddress from, int port) {
         char messageType = (char) received[0];
         switch (messageType) {
-            case 'l':
+            case LOGIN_REQUEST:
                 logger.info("Received TCP login request from " + from);
                 LoginRequest message = LoginRequest.fromBytes(received);
-                addTask(new LoginTask(message, from));
-                break;
-            case 'o':
+                addTask(new LoginTask(message, from, port));
                 break;
         }
     }

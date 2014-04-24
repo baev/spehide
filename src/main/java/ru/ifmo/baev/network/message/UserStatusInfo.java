@@ -1,7 +1,5 @@
 package ru.ifmo.baev.network.message;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Utils;
 import ru.ifmo.baev.network.model.AbstractUserStatusInfo;
 
@@ -26,7 +24,8 @@ public class UserStatusInfo extends AbstractUserStatusInfo {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.put((byte) getPrefix());
+        byteBuffer.putChar(Prefix.USER_STATUS_INFO);
+
         byteBuffer.put(Utils.getBytesFrom(login));
         byteBuffer.put(Utils.getBytesFrom(address));
         byteBuffer.putLong(lastNotificationTime);
@@ -54,9 +53,5 @@ public class UserStatusInfo extends AbstractUserStatusInfo {
     protected static Long getTimeFromBytes(byte[] bytes) {
         byte[] pass = Utils.getBytes(bytes, PREFIX_SIZE + LOGIN_SIZE + ADDRESS_SIZE, TIME_SIZE);
         return Utils.longFromBytes(pass);
-    }
-
-    protected char getPrefix() {
-        return 'i';
     }
 }

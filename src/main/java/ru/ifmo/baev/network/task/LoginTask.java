@@ -1,13 +1,13 @@
-package ru.ifmo.baev.network.server;
+package ru.ifmo.baev.network.task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.Task;
 import ru.ifmo.baev.network.message.LoginRequest;
 import ru.ifmo.baev.network.message.LoginSuccessfully;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.model.ClientAuth;
+import ru.ifmo.baev.network.server.ServerData;
 
 import java.net.InetAddress;
 import java.util.UUID;
@@ -22,8 +22,8 @@ public class LoginTask extends Task<LoginRequest> {
 
     private static final Object LOCK = new Object();
 
-    public LoginTask(LoginRequest message, InetAddress address) {
-        super(message, address);
+    public LoginTask(LoginRequest message, InetAddress address, int port) {
+        super(message, address, port);
     }
 
     @Override
@@ -64,7 +64,11 @@ public class LoginTask extends Task<LoginRequest> {
         message.setUid(auth.getUid());
         message.setToken(auth.getToken());
         message.setFriendsToken(auth.getFriendsToken());
-        return new MessageContainer<>(message, address);
+        return new MessageContainer<>(
+                message,
+                address,
+                getContainer().getPort()
+        );
     }
 
     private ClientAuth createClientAuthData(String pass) {

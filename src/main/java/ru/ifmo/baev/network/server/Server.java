@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.MessageProcessor;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.MessageContainer;
 
 import java.io.IOException;
@@ -51,8 +51,8 @@ public class Server {
         processors.add(new ServerSender(outgoing));
 
         for (AbstractProcessor processor : processors) {
-            new Thread(processor).start();
             processor.start();
+            new Thread(processor).start();
         }
     }
 

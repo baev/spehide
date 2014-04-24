@@ -1,9 +1,12 @@
 package ru.ifmo.baev.network;
 
+import ru.ifmo.baev.network.message.Voice;
+
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
+import java.io.IOException;
+import java.net.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -69,7 +72,7 @@ public class Recorder {
         return framesRead;
     }
 
-    public static void main(String[] args) throws LineUnavailableException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         Config config = new Config();
 
         Recorder recorder = new Recorder();
@@ -80,16 +83,32 @@ public class Recorder {
 
         Thread.sleep(1000);
 
-        SourceDataLine speaker = AudioSystem.getSourceDataLine(config.getAudioFormat());
-        speaker.open();
-        System.out.println("play...");
-        speaker.start();
+//        SourceDataLine speaker = AudioSystem.getSourceDataLine(config.getAudioFormat());
+//        speaker.open();
+//        System.out.println("play...");
+//        speaker.start();
+//        for (byte[] bytes : recorder.getFramesRead()) {
+//            speaker.write(bytes, 0, bytes.length);
+//        }
+//        speaker.drain();
+//        speaker.stop();
+//        speaker.close();
+
+        InetAddress address = InetAddress.getByName("localhost");
+        DatagramSocket socket = new DatagramSocket();
+        long number = 0;
         for (byte[] bytes : recorder.getFramesRead()) {
-            speaker.write(bytes, 0, bytes.length);
+            Voice voice = new Voice();
+            voice.setNumber(number++);
+            voice.setFrame(bytes);
+            DatagramPacket packet = new DatagramPacket(voice.toBytes(), Voice.SIZE, address, new Config().getClientUDPPort());
+            try {
+                socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        speaker.drain();
-        speaker.stop();
-        speaker.close();
+        socket.close();
     }
 
 

@@ -3,6 +3,7 @@ package ru.ifmo.baev.network;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.ifmo.baev.network.task.Task;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -31,6 +32,7 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
                 ServerSocket serverSocket = new ServerSocket(getPort());
                 Socket socket = serverSocket.accept();
                 InetAddress address = socket.getInetAddress();
+                int port = socket.getPort();
 
                 logger.info(String.format(
                         "%s receive tcp message from %s",
@@ -39,7 +41,7 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
                 ));
 
                 byte[] bytes = IOUtils.toByteArray(socket.getInputStream());
-                process(bytes, address);
+                process(bytes, address, port);
                 socket.close();
                 serverSocket.close();
             } catch (IOException e) {
@@ -51,7 +53,7 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
 
     public abstract int getPort();
 
-    public abstract void process(byte[] received, InetAddress from);
+    public abstract void process(byte[] received, InetAddress from, int port);
 
     public void addTask(Task task) {
         getTasks().add(task);

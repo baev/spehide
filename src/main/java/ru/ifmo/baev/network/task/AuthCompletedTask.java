@@ -1,9 +1,10 @@
-package ru.ifmo.baev.network.client;
+package ru.ifmo.baev.network.task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
-import ru.ifmo.baev.network.Task;
+import ru.ifmo.baev.network.client.ClientData;
+import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.LoginSuccessfully;
 import ru.ifmo.baev.network.message.MessageContainer;
 
@@ -17,8 +18,8 @@ public class AuthCompletedTask extends Task<LoginSuccessfully> {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    public AuthCompletedTask(LoginSuccessfully message, InetAddress address) {
-        super(message, address);
+    public AuthCompletedTask(LoginSuccessfully message, InetAddress address, int port) {
+        super(message, address, port);
     }
 
     @Override

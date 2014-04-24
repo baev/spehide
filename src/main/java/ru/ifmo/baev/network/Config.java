@@ -36,14 +36,17 @@ public class Config {
     @Property("audio.frame.samples.count")
     private int audioFrameSamplesCount = 256;
 
-    @Property("server.tcp.prot")
+    @Property("server.tcp.port")
     private int serverTCPPort = 6676;
 
-    @Property("server.udp.prot")
+    @Property("server.udp.port")
     private int serverUDPPort = 6677;
 
     @Property("client.tcp.port")
     private int clientTCPPort = 6576;
+
+    @Property("client.udp.port")
+    private int clientUDPPort = 6577;
 
     @Property("client.alive.notify.delay")
     private long clientAliveNotifyDelay = 10;
@@ -119,5 +122,9 @@ public class Config {
 
     public long getClientOnlineDelay() {
         return clientOnlineDelay;
+    }
+
+    public int getClientUDPPort() {
+        return clientUDPPort;
     }
 }

@@ -1,6 +1,7 @@
 package ru.ifmo.baev.network;
 
 import ru.ifmo.baev.network.message.MessageContainer;
+import ru.ifmo.baev.network.task.Task;
 
 import java.util.Queue;
 

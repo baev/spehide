@@ -1,6 +1,7 @@
 package ru.ifmo.baev.network.client;
 
 import ru.ifmo.baev.network.Data;
+import ru.ifmo.baev.network.model.CallStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import java.net.InetAddress;
@@ -26,6 +27,8 @@ public class ClientData implements Data {
     public String friendsToken;
 
     public boolean authorized = false;
+
+    public CallStatus callStatus = CallStatus.NONE;
 
     public Set<InetAddress> servers = new HashSet<>();
 }

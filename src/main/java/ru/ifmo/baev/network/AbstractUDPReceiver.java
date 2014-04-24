@@ -2,6 +2,7 @@ package ru.ifmo.baev.network;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.ifmo.baev.network.task.Task;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -42,14 +43,15 @@ public abstract class AbstractUDPReceiver extends AbstractProcessor {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedMessage, receivedMessage.length);
                 receiverSocket.receive(receivedPacket);
 
-                process(receivedMessage, receivedPacket.getAddress());
+                System.out.println("received...");
+                process(receivedMessage, receivedPacket.getAddress(), receivedPacket.getPort());
             } catch (IOException e) {
                 logger.error("Error upd message receiving...", e);
             }
         }
     }
 
-    public abstract void process(byte[] received, InetAddress from);
+    public abstract void process(byte[] received, InetAddress from, int port);
 
     public void addTask(Task task) {
         getTasks().add(task);
