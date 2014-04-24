@@ -27,13 +27,13 @@ public class CallRequestTask extends Task<CallRequest> {
         ClientData clientData = (ClientData) data;
 
         switch (clientData.callStatus) {
+            case CALL:
             case NONE:
                 clientData.callStatus = CallStatus.REQUEST;
                 clientData.callWith.add(getContainer().getAddress());
                 break;
             case REQUEST:
             case CONVERSATION:
-            case CALL:
                 return new MessageContainer<>(
                         new CallDeny(),
                         getContainer().getAddress(),

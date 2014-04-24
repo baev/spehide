@@ -31,7 +31,7 @@ public class VoicePlayer extends AbstractVoiceProcessor {
 
     @Override
     protected void before() throws Exception {
-        SourceDataLine speaker = AudioSystem.getSourceDataLine(new Config().getAudioFormat());
+        speaker = AudioSystem.getSourceDataLine(new Config().getAudioFormat());
         speaker.open();
         speaker.start();
         counter = 0;

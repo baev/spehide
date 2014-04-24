@@ -97,6 +97,7 @@ public class Client {
         processors.add(new AliveNotifier(data));
         processors.add(new VoiceRecorder(data, myVoice));
         processors.add(new VoicePlayer(data, incomingVoice));
+        processors.add(new ClientVoiceSender(myVoice));
 
         for (AbstractProcessor processor : processors) {
             processor.start();
