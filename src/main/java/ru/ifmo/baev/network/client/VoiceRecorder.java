@@ -48,6 +48,8 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
         voice.setNumber(counter++);
         voice.setFrame(bytes);
         logger.info("read frame");
+
+        outgoing.add(new MessageContainer<>(voice, data.callWith.get(0), new Config().getClientTCPPort()));
     }
 
     @Override

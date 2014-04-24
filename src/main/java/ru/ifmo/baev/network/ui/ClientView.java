@@ -165,6 +165,7 @@ public class ClientView extends JFrame {
                     } else {
                         client.denyCall();
                         client.getData().callStatus = CallStatus.NONE;
+                        client.getData().callWith.clear();
                     }
                 } catch (UnknownHostException e) {
                     e.printStackTrace();

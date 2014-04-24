@@ -30,6 +30,7 @@ public class CallDenyTask extends Task<CallDeny> {
             case CALL:
             case REQUEST:
                 clientData.callStatus = CallStatus.NONE;
+                clientData.callWith.clear();
                 break;
             case NONE:
             case CONVERSATION:

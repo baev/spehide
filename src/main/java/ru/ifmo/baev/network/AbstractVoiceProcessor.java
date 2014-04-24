@@ -10,7 +10,7 @@ import static ru.ifmo.baev.network.model.CallStatus.CONVERSATION;
  */
 public abstract class AbstractVoiceProcessor extends AbstractProcessor {
 
-    private ClientData data;
+    protected ClientData data;
 
     protected AbstractVoiceProcessor(ClientData data) {
         this.data = data;
