@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.MessageProcessor;
+import ru.ifmo.baev.network.TCPSender;
 import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.MessageContainer;
 
@@ -48,7 +49,7 @@ public class Server {
         processors.add(new ServerTCPReceiver(tasks));
         processors.add(new ServerUDPReceiver(tasks));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
-        processors.add(new ServerSender(outgoing));
+        processors.add(new TCPSender(outgoing));
 
         for (AbstractProcessor processor : processors) {
             processor.start();

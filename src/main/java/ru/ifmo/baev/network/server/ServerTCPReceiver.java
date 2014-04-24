@@ -40,7 +40,7 @@ public class ServerTCPReceiver extends AbstractTCPReceiver {
         char messageType = (char) received[0];
         switch (messageType) {
             case LOGIN_REQUEST:
-                logger.info("Received TCP login request from " + from);
+                logger.info("Received TCP login request from " + from + ":" + port);
                 LoginRequest message = LoginRequest.fromBytes(received);
                 addTask(new LoginTask(message, from, port));
                 break;

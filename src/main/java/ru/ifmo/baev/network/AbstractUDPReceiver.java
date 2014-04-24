@@ -18,7 +18,7 @@ public abstract class AbstractUDPReceiver extends AbstractProcessor {
 
     private static final int MAX_UDP_MESSAGE_SIZE = 2048;
 
-    private final Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(AbstractUDPReceiver.class);
 
     private final Queue<Task> tasks;
 
@@ -43,7 +43,7 @@ public abstract class AbstractUDPReceiver extends AbstractProcessor {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedMessage, receivedMessage.length);
                 receiverSocket.receive(receivedPacket);
 
-                process(receivedMessage, receivedPacket.getAddress(), receivedPacket.getPort());
+                process(receivedMessage, receivedPacket.getAddress(), new Config().getClientTCPPort());
             } catch (IOException e) {
                 logger.error("Error upd message receiving...", e);
             }

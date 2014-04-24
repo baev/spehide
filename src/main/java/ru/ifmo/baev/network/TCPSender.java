@@ -11,7 +11,7 @@ import java.util.Queue;
  * @author Dmitry Baev charlie@yandex-team.ru
  *         Date: 15.04.14
  */
-public abstract class AbstractTCPSender extends AbstractProcessor {
+public class TCPSender extends AbstractProcessor {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
@@ -19,7 +19,7 @@ public abstract class AbstractTCPSender extends AbstractProcessor {
 
     private final Queue<MessageContainer> outgoing;
 
-    public AbstractTCPSender(Queue<MessageContainer> outgoing) {
+    public TCPSender(Queue<MessageContainer> outgoing) {
         this.outgoing = outgoing;
     }
 
@@ -33,12 +33,13 @@ public abstract class AbstractTCPSender extends AbstractProcessor {
                 }
                 MessageContainer container = outgoing.poll();
                 logger.info(String.format(
-                        "%s sending message %s to %s",
+                        "%s sending message %s to %s:%d",
                         getClass(),
                         container.getMessage().getClass(),
-                        container.getAddress()
+                        container.getAddress(),
+                        container.getPort()
                 ));
-                Socket socket = new Socket(container.getAddress(), getPort());
+                Socket socket = new Socket(container.getAddress(), container.getPort());
                 socket.getOutputStream().write(container.getMessage().toBytes());
                 socket.close();
             } catch (Exception e) {
@@ -46,6 +47,4 @@ public abstract class AbstractTCPSender extends AbstractProcessor {
             }
         }
     }
-
-    public abstract int getPort();
 }

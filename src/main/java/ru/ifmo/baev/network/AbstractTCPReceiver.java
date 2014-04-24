@@ -18,7 +18,7 @@ import java.util.Queue;
  */
 public abstract class AbstractTCPReceiver extends AbstractProcessor {
 
-    private final Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(AbstractTCPReceiver.class);
 
     private final Queue<Task> tasks;
 
@@ -36,13 +36,14 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
                 int port = socket.getPort();
 
                 logger.info(String.format(
-                        "%s receive tcp message from %s",
+                        "%s receive tcp message from %s:%d",
                         getClass().getSimpleName(),
-                        address
+                        address,
+                        port
                 ));
 
                 byte[] bytes = IOUtils.toByteArray(socket.getInputStream());
-                process(bytes, address, port);
+                process(bytes, address, new Config().getClientTCPPort());
                 socket.close();
                 serverSocket.close();
             } catch (IOException e) {

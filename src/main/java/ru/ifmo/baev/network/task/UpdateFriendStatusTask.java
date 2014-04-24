@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.Data;
 import ru.ifmo.baev.network.client.ClientData;
-import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.message.UserStatusInfo;
 import ru.ifmo.baev.network.model.ClientStatus;

@@ -4,11 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractUDPReceiver;
 import ru.ifmo.baev.network.Config;
-import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.AliveNotification;
 import ru.ifmo.baev.network.message.IsUserOnline;
 import ru.ifmo.baev.network.task.IsClientOnlineTask;
 import ru.ifmo.baev.network.task.MarkClientOnlineTask;
+import ru.ifmo.baev.network.task.Task;
 
 import java.net.InetAddress;
 import java.util.Queue;
@@ -36,12 +36,12 @@ public class ServerUDPReceiver extends AbstractUDPReceiver {
         char messageType = (char) received[0];
         switch (messageType) {
             case ALIVE:
-                logger.info("Received UDP alive notification from " + from);
+                logger.info("Received UDP alive notification from " + from + ":" + port);
                 AliveNotification aliveNotification = AliveNotification.fromBytes(received);
                 addTask(new MarkClientOnlineTask(aliveNotification, from, port));
                 break;
             case IS_USER_ONLINE:
-                logger.info("Received UDP is user online from " + from);
+                logger.info("Received UDP is user online from " + from + ":" + port);
                 IsUserOnline isUserOnline = IsUserOnline.fromBytes(received);
                 addTask(new IsClientOnlineTask(isUserOnline, from, port));
                 break;

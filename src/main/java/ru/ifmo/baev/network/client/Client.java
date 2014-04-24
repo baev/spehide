@@ -3,6 +3,7 @@ package ru.ifmo.baev.network.client;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.MessageProcessor;
+import ru.ifmo.baev.network.TCPSender;
 import ru.ifmo.baev.network.message.*;
 import ru.ifmo.baev.network.task.Task;
 
@@ -92,7 +93,7 @@ public class Client {
         processors.add(new ClientTCPReceiver(tasks));
         processors.add(new ClientUDPReceiver(data, tasks, incomingVoice));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
-        processors.add(new ClientSender(outgoing));
+        processors.add(new TCPSender(outgoing));
         processors.add(new AliveNotifier(data));
         processors.add(new VoiceRecorder(data, myVoice));
         processors.add(new VoicePlayer(data, incomingVoice));
