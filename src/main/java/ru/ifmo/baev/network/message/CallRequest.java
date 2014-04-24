@@ -13,7 +13,7 @@ public class CallRequest implements Message {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.CALL_REQUEST);
+        byteBuffer.put((byte) Prefix.CALL_REQUEST);
         return byteBuffer.array();
     }
 

@@ -3,17 +3,17 @@ package ru.ifmo.baev.network.client;
 import ru.ifmo.baev.network.AbstractProcessor;
 import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.MessageProcessor;
+import ru.ifmo.baev.network.message.*;
 import ru.ifmo.baev.network.task.Task;
-import ru.ifmo.baev.network.message.CallRequest;
-import ru.ifmo.baev.network.message.LoginRequest;
-import ru.ifmo.baev.network.message.MessageContainer;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -34,28 +34,54 @@ public class Client {
 
     private Queue<MessageContainer> outgoing = new ConcurrentLinkedQueue<>();
 
+    private Queue<MessageContainer> myVoice = new ConcurrentLinkedQueue<>();
+
+    private Map<Long, byte[]> incomingVoice = new ConcurrentHashMap<>();
+
     private List<AbstractProcessor> processors = new ArrayList<>();
 
     private boolean running = false;
 
     public void login(String server, String login, String pass) throws UnknownHostException {
-        LoginRequest request = new LoginRequest();
-        request.setLogin(login);
-        request.setPass(pass);
+        LoginRequest message = new LoginRequest();
+        message.setLogin(login);
+        message.setPass(pass);
         outgoing.add(new MessageContainer<>(
-                request,
+                message,
                 InetAddress.getByName(server),
                 config.getServerTCPPort()
         ));
     }
 
-    public void call(String address) throws UnknownHostException {
-        CallRequest request = new CallRequest();
+    public void call(InetAddress address) {
+        CallRequest message = new CallRequest();
         outgoing.add(new MessageContainer<>(
-                request,
-                InetAddress.getByName(address),
+                message,
+                address,
                 config.getClientTCPPort()
         ));
+    }
+
+    public void allowCall() throws UnknownHostException {
+        CallAllow message = new CallAllow();
+        for (InetAddress address : data.callWith) {
+            outgoing.add(new MessageContainer<>(
+                    message,
+                    address,
+                    config.getClientTCPPort()
+            ));
+        }
+    }
+
+    public void denyCall() throws UnknownHostException {
+        CallDeny message = new CallDeny();
+        for (InetAddress address : data.callWith) {
+            outgoing.add(new MessageContainer<>(
+                    message,
+                    address,
+                    config.getClientTCPPort()
+            ));
+        }
     }
 
     public void start() throws IOException {
@@ -64,10 +90,12 @@ public class Client {
         }
         running = true;
         processors.add(new ClientTCPReceiver(tasks));
-        processors.add(new ClientUDPReceiver(tasks));
+        processors.add(new ClientUDPReceiver(data, tasks, incomingVoice));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new ClientSender(outgoing));
         processors.add(new AliveNotifier(data));
+        processors.add(new VoiceRecorder(data, myVoice));
+        processors.add(new VoicePlayer(data, incomingVoice));
 
         for (AbstractProcessor processor : processors) {
             processor.start();

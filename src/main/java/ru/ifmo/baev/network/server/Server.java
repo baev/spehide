@@ -72,7 +72,7 @@ public class Server {
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = new Server();
         server.start();
-        Thread.sleep(300000);
+        Thread.sleep(3000000);
         server.stop();
     }
 }

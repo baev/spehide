@@ -30,7 +30,7 @@ public class UpdateFriendStatusTask extends Task<UserStatusInfo> {
             throw new Exception("Data should be instance of ClientData");
         }
 
-        String address = getContainer().getMessage().getAddress();
+        InetAddress address = getContainer().getMessage().getAddress();
 
         ClientData clientData = (ClientData) data;
 

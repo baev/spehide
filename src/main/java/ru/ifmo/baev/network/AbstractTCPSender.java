@@ -32,7 +32,12 @@ public abstract class AbstractTCPSender extends AbstractProcessor {
                     continue;
                 }
                 MessageContainer container = outgoing.poll();
-                logger.info(String.format("%s sending message to %s", getClass(), container.getAddress()));
+                logger.info(String.format(
+                        "%s sending message %s to %s",
+                        getClass(),
+                        container.getMessage().getClass(),
+                        container.getAddress()
+                ));
                 Socket socket = new Socket(container.getAddress(), getPort());
                 socket.getOutputStream().write(container.getMessage().toBytes());
                 socket.close();

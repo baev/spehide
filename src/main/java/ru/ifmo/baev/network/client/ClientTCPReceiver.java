@@ -10,6 +10,7 @@ import ru.ifmo.baev.network.task.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Queue;
 
 import static ru.ifmo.baev.network.message.Prefix.*;
@@ -35,7 +36,7 @@ public class ClientTCPReceiver extends AbstractTCPReceiver {
     }
 
     @Override
-    public void process(byte[] received, InetAddress from, int port) {
+    public void process(byte[] received, InetAddress from, int port) throws UnknownHostException {
         char messageType = (char) received[0];
         switch (messageType) {
             case LOGIN_SUCCESSFULLY:

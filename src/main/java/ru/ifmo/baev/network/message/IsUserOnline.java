@@ -25,7 +25,7 @@ public class IsUserOnline extends AbstractIsOnline {
     @Override
     public byte[] toBytes() throws NoSuchAlgorithmException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.IS_USER_ONLINE);
+        byteBuffer.put((byte) Prefix.IS_USER_ONLINE);
         byteBuffer.put(Utils.orderBytes(Utils.sha256(login)));
         byteBuffer.put(Utils.getBytesFrom(key));
         byteBuffer.putLong(lastNotificationTime);

@@ -2,10 +2,12 @@ package ru.ifmo.baev.network.client;
 
 import ru.ifmo.baev.network.AbstractUDPReceiver;
 import ru.ifmo.baev.network.Config;
-import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.Voice;
+import ru.ifmo.baev.network.model.CallStatus;
+import ru.ifmo.baev.network.task.Task;
 
 import java.net.InetAddress;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -15,14 +17,15 @@ import java.util.Queue;
 public class ClientUDPReceiver extends AbstractUDPReceiver {
     private final int port;
 
-    private final VoicePlayer player;
+    private Map<Long, byte[]> incomingVoice;
 
-    protected ClientUDPReceiver(Queue<Task> tasks) {
+    private ClientData data;
+
+    protected ClientUDPReceiver(ClientData data, Queue<Task> tasks, Map<Long, byte[]> incomingVoice) {
         super(tasks);
         port = new Config().getClientUDPPort();
-        player = new VoicePlayer();
-        player.start();
-        new Thread(player).start();
+        this.incomingVoice = incomingVoice;
+        this.data = data;
     }
 
     @Override
@@ -30,9 +33,11 @@ public class ClientUDPReceiver extends AbstractUDPReceiver {
         char messageType = (char) received[0];
         switch (messageType) {
             case 'v':
+                if (data.callStatus != CallStatus.CONVERSATION || !data.callWith.contains(from)) {
+                    return;
+                }
                 Voice voice = Voice.fromBytes(received);
-                System.out.println(voice.getNumber());
-                player.play(voice);
+                incomingVoice.put(voice.getNumber(), voice.getFrame());
                 break;
         }
     }

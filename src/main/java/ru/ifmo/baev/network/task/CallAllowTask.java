@@ -27,12 +27,12 @@ public class CallAllowTask extends Task<CallDeny> {
         ClientData clientData = (ClientData) data;
 
         switch (clientData.callStatus) {
-            case NONE:
-                break;
             case REQUEST:
-                clientData.callStatus = CallStatus.CALL;
+                clientData.callStatus = CallStatus.CONVERSATION;
                 break;
+            case NONE:
             case CALL:
+            case CONVERSATION:
                 break;
         }
 

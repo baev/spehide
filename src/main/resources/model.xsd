@@ -37,19 +37,23 @@
 
     <xsd:element name="friend-info" type="model:friend-info"/>
     <xsd:complexType name="friend-info">
+        <xsd:sequence>
+            <xsd:element name="address" type="model:inet-address"/>
+        </xsd:sequence>
         <xsd:attribute name="server" type="xsd:string"/>
         <xsd:attribute name="login" type="xsd:string"/>
         <xsd:attribute name="status" type="model:client-status"/>
         <xsd:attribute name="friend-token" type="xsd:string"/>
-        <xsd:attribute name="address" type="xsd:string"/>
         <xsd:attribute name="last-notification-time" type="xsd:long"/>
     </xsd:complexType>
 
 
     <xsd:element name="client-info" type="model:client-info"/>
     <xsd:complexType name="client-info">
+        <xsd:sequence>
+            <xsd:element name="address" type="model:inet-address"/>
+        </xsd:sequence>
         <xsd:attribute name="uid" type="xsd:string"/>
-        <xsd:attribute name="address" type="xsd:string"/>
         <xsd:attribute name="last-notification-time" type="xsd:long"/>
     </xsd:complexType>
 
@@ -67,6 +71,7 @@
             <xsd:enumeration value="none"/>
             <xsd:enumeration value="request"/>
             <xsd:enumeration value="call"/>
+            <xsd:enumeration value="conversation"/>
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -130,8 +135,10 @@
                 <itn:implements>ru.ifmo.baev.network.message.Message</itn:implements>
             </xsd:appinfo>
         </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="address" type="model:inet-address"/>
+        </xsd:sequence>
         <xsd:attribute name="login" type="xsd:string"/>
-        <xsd:attribute name="address" type="xsd:string"/>
         <xsd:attribute name="last-notification-time" type="xsd:long"/>
     </xsd:complexType>
 
@@ -149,4 +156,6 @@
         <xsd:attribute name="from" type="xsd:string"/>
         <xsd:attribute name="number" type="xsd:long"/>
     </xsd:complexType>
+
+    <xsd:complexType name="inet-address"/>
 </xsd:schema>

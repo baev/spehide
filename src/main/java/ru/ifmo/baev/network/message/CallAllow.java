@@ -13,7 +13,7 @@ public class CallAllow implements Message {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.CALL_ALLOW);
+        byteBuffer.put((byte) Prefix.CALL_ALLOW);
         return byteBuffer.array();
     }
 

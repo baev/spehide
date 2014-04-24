@@ -13,7 +13,7 @@ public class CallDeny implements Message {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.CALL_DENY);
+        byteBuffer.put((byte) Prefix.CALL_DENY);
         return byteBuffer.array();
     }
 

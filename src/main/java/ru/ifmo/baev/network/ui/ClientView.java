@@ -1,11 +1,13 @@
 package ru.ifmo.baev.network.ui;
 
 import ru.ifmo.baev.network.client.Client;
+import ru.ifmo.baev.network.model.CallStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 public class ClientView extends JFrame {
 
@@ -16,6 +18,8 @@ public class ClientView extends JFrame {
     private static final String DELETE_BUTTON_NAME = "Delete";
 
     private static final String ADD_BUTTON_NAME = "Add";
+
+    private static final String DROP_CALL_BUTTON_NAME = "Drop";
 
     private Client client;
 
@@ -30,6 +34,8 @@ public class ClientView extends JFrame {
     private JPanel buttonsPanel;
 
     private JButton callButton;
+
+    private JButton dropButton;
 
     private JButton addButton;
 
@@ -55,6 +61,7 @@ public class ClientView extends JFrame {
         callButton = createCallButton();
         deleteButton = createDeleteButton();
         addButton = createAddButton();
+        dropButton = createDropButton();
         buttonsPanel = createButtonsPanel();
         listModel = createListModel();
         contactList = createContactList();
@@ -128,6 +135,43 @@ public class ClientView extends JFrame {
         }
     }
 
+    public void checkCallStatus() {
+        CallStatus status = client.getData().callStatus;
+        switch (status) {
+            case NONE:
+                getCallButton().setEnabled(true);
+                getDropButton().setEnabled(false);
+                return;
+            case CALL:
+            case CONVERSATION:
+                getCallButton().setEnabled(false);
+                getDropButton().setEnabled(true);
+                return;
+            case REQUEST:
+                getCallButton().setEnabled(false);
+                getDropButton().setEnabled(true);
+                int option = JOptionPane.showConfirmDialog(
+                        null,
+                        "Start new conversation?",
+                        "New incoming call...",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+                try {
+                    if (option == JOptionPane.OK_OPTION) {
+                        client.allowCall();
+                        client.getData().callStatus = CallStatus.CONVERSATION;
+                    } else {
+                        client.denyCall();
+                        client.getData().callStatus = CallStatus.NONE;
+                    }
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
     private void addFriend(DefaultListModel<String> listModel, FriendInfo info) {
         listModel.addElement(String.format("%s: %s", info.getStatus(), info.getLogin()));
     }
@@ -164,6 +208,7 @@ public class ClientView extends JFrame {
         buttonsPanel.add(callButton);
         buttonsPanel.add(addButton);
         buttonsPanel.add(deleteButton);
+        buttonsPanel.add(dropButton);
 
         return buttonsPanel;
     }
@@ -171,6 +216,14 @@ public class ClientView extends JFrame {
     public JButton createCallButton() {
         JButton button = new JButton(CALL_BUTTON_NAME);
         button.setFocusable(false);
+        button.setEnabled(false);
+        return button;
+    }
+
+    public JButton createDropButton() {
+        JButton button = new JButton(DROP_CALL_BUTTON_NAME);
+        button.setFocusable(false);
+        button.setEnabled(false);
         return button;
     }
 
@@ -279,4 +332,7 @@ public class ClientView extends JFrame {
         }
     }
 
+    public JButton getDropButton() {
+        return dropButton;
+    }
 }

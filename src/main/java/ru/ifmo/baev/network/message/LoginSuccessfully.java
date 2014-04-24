@@ -24,7 +24,7 @@ public class LoginSuccessfully extends AbstractLoginSuccessfully {
     @Override
     public byte[] toBytes() throws Exception {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.LOGIN_SUCCESSFULLY);
+        byteBuffer.put((byte) Prefix.LOGIN_SUCCESSFULLY);
 
         byteBuffer.put(Utils.getBytesFrom(uid));
         byteBuffer.put(Utils.getBytesFrom(token));

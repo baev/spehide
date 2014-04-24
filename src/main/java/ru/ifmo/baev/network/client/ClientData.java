@@ -5,10 +5,7 @@ import ru.ifmo.baev.network.model.CallStatus;
 import ru.ifmo.baev.network.model.FriendInfo;
 
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -29,6 +26,8 @@ public class ClientData implements Data {
     public boolean authorized = false;
 
     public CallStatus callStatus = CallStatus.NONE;
+
+    public List<InetAddress> callWith = new ArrayList<>();
 
     public Set<InetAddress> servers = new HashSet<>();
 }

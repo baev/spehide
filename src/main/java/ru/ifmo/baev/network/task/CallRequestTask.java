@@ -2,7 +2,6 @@ package ru.ifmo.baev.network.task;
 
 import ru.ifmo.baev.network.Data;
 import ru.ifmo.baev.network.client.ClientData;
-import ru.ifmo.baev.network.task.Task;
 import ru.ifmo.baev.network.message.CallDeny;
 import ru.ifmo.baev.network.message.CallRequest;
 import ru.ifmo.baev.network.message.MessageContainer;
@@ -30,8 +29,10 @@ public class CallRequestTask extends Task<CallRequest> {
         switch (clientData.callStatus) {
             case NONE:
                 clientData.callStatus = CallStatus.REQUEST;
+                clientData.callWith.add(getContainer().getAddress());
                 break;
             case REQUEST:
+            case CONVERSATION:
             case CALL:
                 return new MessageContainer<>(
                         new CallDeny(),

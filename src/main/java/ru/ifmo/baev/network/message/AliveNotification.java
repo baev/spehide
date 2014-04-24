@@ -24,7 +24,7 @@ public class AliveNotification extends AbstractAliveNotification {
     @Override
     public byte[] toBytes() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(SIZE);
-        byteBuffer.putChar(Prefix.ALIVE);
+        byteBuffer.put((byte) Prefix.ALIVE);
         byteBuffer.put(Utils.getBytesFrom(uid));
         byteBuffer.put(Utils.getBytesFrom(token));
         byteBuffer.putLong(time);

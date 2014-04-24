@@ -43,7 +43,6 @@ public abstract class AbstractUDPReceiver extends AbstractProcessor {
                 DatagramPacket receivedPacket = new DatagramPacket(receivedMessage, receivedMessage.length);
                 receiverSocket.receive(receivedPacket);
 
-                System.out.println("received...");
                 process(receivedMessage, receivedPacket.getAddress(), receivedPacket.getPort());
             } catch (IOException e) {
                 logger.error("Error upd message receiving...", e);

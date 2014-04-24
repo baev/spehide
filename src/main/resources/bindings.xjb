@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:model="urn:model.network.baev.ifmo.ru"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_1.xsd"
+        version="2.1">
+
+    <jaxb:globalBindings>
+        <xjc:simple/>
+    </jaxb:globalBindings>
+
+    <jaxb:bindings scd="/type::model:inet-address">
+        <jaxb:class ref="java.net.InetAddress"/>
+    </jaxb:bindings>
+</jaxb:bindings>

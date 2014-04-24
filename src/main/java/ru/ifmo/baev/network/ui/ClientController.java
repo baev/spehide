@@ -1,5 +1,7 @@
 package ru.ifmo.baev.network.ui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.client.Client;
 import ru.ifmo.baev.network.model.CallStatus;
 import ru.ifmo.baev.network.model.ClientStatus;
@@ -10,13 +12,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.UnknownHostException;
+import java.net.InetAddress;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
  *         Date: 16.04.14
  */
 public class ClientController {
+
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private final Client client;
 
@@ -50,7 +54,6 @@ public class ClientController {
                                     .withLastNotificationTime(System.currentTimeMillis())
                     );
 
-                    System.out.println(login + ": " + publicKey);
                     view.updateFriendsList();
 
                     panel.getLoginField().setText("");
@@ -77,13 +80,25 @@ public class ClientController {
             }
         });
 
+        view.getDropButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                client.getData().callWith.clear();
+                client.getData().callStatus = CallStatus.NONE;
+            }
+        });
+
         view.getContactList().addListSelectionListener(
                 new ListSelectionListener() {
                     public void valueChanged(ListSelectionEvent e) {
                         if (view.getContactList().getSelectedIndex() >= 0) {
                             view.getDeleteButton().setEnabled(true);
+                            if (client.getData().callStatus.equals(CallStatus.NONE)) {
+                                view.getCallButton().setEnabled(true);
+                            }
                         } else {
                             view.getDeleteButton().setEnabled(false);
+                            view.getCallButton().setEnabled(false);
                         }
                     }
                 }
@@ -92,27 +107,37 @@ public class ClientController {
         view.getCallButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                client.getData().callStatus = CallStatus.REQUEST;
+                logger.info("Try to call... Call status - " + client.getData().callStatus);
+                if (client.getData().callStatus != CallStatus.NONE) {
+                    return;
+                }
+                client.getData().callStatus = CallStatus.CALL;
+                view.getCallButton().setEnabled(false);
+
                 String uid = getSelectedUserUid();
                 if (uid == null) {
+                    logger.info("Uid is null");
+                    client.getData().callStatus = CallStatus.NONE;
                     return;
                 }
 
                 FriendInfo info = client.getData().friends.get(uid);
                 if (info == null) {
+                    logger.info("Info is null");
+                    client.getData().callStatus = CallStatus.NONE;
                     return;
                 }
 
-                String address = info.getAddress();
+                InetAddress address = info.getAddress();
                 if (address == null) {
+                    logger.info("Address is null");
+                    client.getData().callStatus = CallStatus.NONE;
                     return;
                 }
 
-                try {
-                    client.call(address);
-                } catch (UnknownHostException e1) {
-                    e1.printStackTrace();
-                }
+                logger.info("Call to address: " + address);
+                client.call(address);
+                client.getData().callWith.add(address);
             }
         });
 
@@ -122,6 +147,7 @@ public class ClientController {
             public void actionPerformed(ActionEvent e) {
                 view.updateFriendsList();
                 view.updatePublicKey();
+                view.checkCallStatus();
 
             }
         });

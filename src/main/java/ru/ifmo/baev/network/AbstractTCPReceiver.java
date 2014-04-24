@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Queue;
 
 /**
@@ -53,7 +54,7 @@ public abstract class AbstractTCPReceiver extends AbstractProcessor {
 
     public abstract int getPort();
 
-    public abstract void process(byte[] received, InetAddress from, int port);
+    public abstract void process(byte[] received, InetAddress from, int port) throws UnknownHostException;
 
     public void addTask(Task task) {
         getTasks().add(task);

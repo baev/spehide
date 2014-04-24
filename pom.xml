@@ -81,6 +81,7 @@
                 </executions>
                 <configuration>
                     <schemaDirectory>src/main/resources</schemaDirectory>
+                    <bindingDirectory>src/main/resources</bindingDirectory>
                     <readOnly>true</readOnly>
                     <removeOldOutput>true</removeOldOutput>
                     <verbose>true</verbose>

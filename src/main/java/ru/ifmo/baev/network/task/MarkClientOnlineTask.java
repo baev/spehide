@@ -30,7 +30,7 @@ public class MarkClientOnlineTask extends Task<AliveNotification> {
         long time = getContainer().getMessage().getTime();
 
         ClientInfo info = new ClientInfo()
-                .withAddress(getContainer().getAddress().getHostAddress())
+                .withAddress(getContainer().getAddress())
                 .withLastNotificationTime(time)
                 .withUid(uid);
         clients.put(uid, info);
