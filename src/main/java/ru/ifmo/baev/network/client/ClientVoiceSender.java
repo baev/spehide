@@ -34,8 +34,6 @@ public class ClientVoiceSender {
                     port
 
             ));
-
-            logger.info("send frame");
         } catch (Exception e) {
             e.printStackTrace();
         }

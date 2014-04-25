@@ -35,8 +35,6 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         speaker.open();
         speaker.start();
         counter = 0;
-
-//        Thread.sl eep(1000);
     }
 
     @Override
@@ -55,7 +53,6 @@ public class VoicePlayer extends AbstractVoiceProcessor {
                     speaker.write(voice.getFrame(), 0, voice.getFrame().length);
                     break;
                 }
-                logger.info(String.format("wait %dms frame %d", i, counter));
                 Thread.sleep(i);
                 index = (int) (counter % frames.size());
                 voice = frames.get(index);

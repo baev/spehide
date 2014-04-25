@@ -47,8 +47,6 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
         Voice voice = new Voice();
         voice.setNumber(counter++);
         voice.setFrame(bytes);
-        logger.info("read frame");
-
         if (!data.callWith.isEmpty()) {
             sender.send(voice, data.callWith.get(0), new Config().getClientTCPPort());
         }

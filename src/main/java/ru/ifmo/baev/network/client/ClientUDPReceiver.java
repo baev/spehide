@@ -47,7 +47,6 @@ public class ClientUDPReceiver extends AbstractUDPReceiver {
                 Voice old = incomingVoice.get(index);
 
                 if (old == null || old.getNumber() < voice.getNumber()) {
-                    logger.info("received good frame " + voice.getNumber());
                     incomingVoice.set(index, voice);
                 } else {
                     logger.info("received bad frame");
