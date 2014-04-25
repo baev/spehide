@@ -59,11 +59,11 @@ public class AliveNotifier extends AbstractProcessor {
                 try {
                     socket = new DatagramSocket();
                     sendAlive(socket, server);
-                    for (String uid : data.friends.keySet()) {
-                        FriendInfo friendInfo = data.friends.get(uid);
+                    for (String login : data.friends.keySet()) {
+                        FriendInfo friendInfo = data.friends.get(login);
                         logger.info(String.format(
-                                "Uid: %s, public key: %s",
-                                uid,
+                                "Login: %s, public key: %s",
+                                login,
                                 friendInfo.getFriendToken()
                         ));
 
@@ -72,7 +72,6 @@ public class AliveNotifier extends AbstractProcessor {
                             friendInfo.setStatus(ClientStatus.UNKNOWN);
                         }
 
-                        String login = friendInfo.getLogin();
                         String loginSha256 = Utils.sha256String(login);
                         data.loginHashes.put(loginSha256, login);
                         logger.info(String.format(

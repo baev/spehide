@@ -46,6 +46,8 @@ public class UpdateFriendStatusTask extends Task<UserStatusInfo> {
             logger.info("Can't find info for login " + login);
             return null;
         }
+
+        logger.info(String.format("Received \"%s\" address : %s", login, address));
         info.setStatus(ClientStatus.ONLINE);
         info.setLastNotificationTime(System.currentTimeMillis());
         info.setAddress(address);

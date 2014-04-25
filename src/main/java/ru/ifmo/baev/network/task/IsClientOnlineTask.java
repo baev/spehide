@@ -64,7 +64,13 @@ public class IsClientOnlineTask extends Task<IsUserOnline> {
             return null;
         }
 
-        logger.info("IsUserOnline - Success");
+        logger.info(String.format(
+                "IsUserOnline - Success. Sending to %s address of %s (uid: %s) : %s",
+                getContainer().getAddress(),
+                login,
+                clientAuth.getUid(),
+                clientInfo.getAddress()
+        ));
 
         UserStatusInfo userStatusInfo = new UserStatusInfo();
         userStatusInfo.setAddress(clientInfo.getAddress());
