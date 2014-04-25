@@ -54,6 +54,9 @@ public class Config {
     @Property("client.online.delay")
     private long clientOnlineDelay = 60;
 
+    @Property("client.frames.buffer.count")
+    private long clientFramesBufferCount = 1000;
+
     public int getAudioSampleRate() {
         return audioSampleRate;
     }
@@ -126,5 +129,9 @@ public class Config {
 
     public int getClientUDPPort() {
         return clientUDPPort;
+    }
+
+    public long getClientFramesBufferCount() {
+        return clientFramesBufferCount;
     }
 }

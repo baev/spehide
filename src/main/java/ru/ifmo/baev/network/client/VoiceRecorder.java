@@ -4,12 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractVoiceProcessor;
 import ru.ifmo.baev.network.Config;
-import ru.ifmo.baev.network.message.MessageContainer;
 import ru.ifmo.baev.network.message.Voice;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.TargetDataLine;
-import java.util.Queue;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -23,22 +21,24 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
 
     private TargetDataLine microphone;
 
-    private Queue<MessageContainer> outgoing;
-
     private long counter = 0;
 
-    protected VoiceRecorder(ClientData data, Queue<MessageContainer> outgoing) {
+    private ClientVoiceSender sender;
+
+    protected VoiceRecorder(ClientData data) {
         super(data);
-        this.outgoing = outgoing;
     }
 
     @Override
     protected void before() throws Exception {
+        logger.info("start recording...");
         microphone = AudioSystem.getTargetDataLine(config.getAudioFormat());
         microphone.open(config.getAudioFormat());
         microphone.start();
 
         counter = 0;
+
+        sender = new ClientVoiceSender();
     }
 
     @Override
@@ -49,7 +49,9 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
         voice.setFrame(bytes);
         logger.info("read frame");
 
-        outgoing.add(new MessageContainer<>(voice, data.callWith.get(0), new Config().getClientTCPPort()));
+        if (!data.callWith.isEmpty()) {
+            sender.send(voice, data.callWith.get(0), new Config().getClientTCPPort());
+        }
     }
 
     @Override
@@ -59,6 +61,7 @@ public class VoiceRecorder extends AbstractVoiceProcessor {
         microphone.close();
 
         counter = 0;
+        sender.close();
     }
 
     private byte[] readFrame() {

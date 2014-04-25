@@ -1,12 +1,14 @@
 package ru.ifmo.baev.network.client;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.ifmo.baev.network.AbstractVoiceProcessor;
 import ru.ifmo.baev.network.Config;
 import ru.ifmo.baev.network.message.Voice;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -14,19 +16,17 @@ import java.util.Map;
  */
 public class VoicePlayer extends AbstractVoiceProcessor {
 
-    private final Map<Long, byte[]> frames;
+    private final Logger logger = LogManager.getLogger(getClass());
+
+    private final List<Voice> frames;
 
     private long counter = 0;
 
     private SourceDataLine speaker;
 
-    protected VoicePlayer(ClientData data, Map<Long, byte[]> frames) {
+    protected VoicePlayer(ClientData data, List<Voice> frames) {
         super(data);
         this.frames = frames;
-    }
-
-    public void play(Voice voice) {
-        frames.put(voice.getNumber(), voice.getFrame());
     }
 
     @Override
@@ -35,26 +35,39 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         speaker.open();
         speaker.start();
         counter = 0;
+
+//        Thread.sl eep(1000);
     }
 
     @Override
     public void process() {
-        try {
-            byte[] bytes = frames.get(counter);
-            if (bytes == null) {
-                Thread.sleep(10);
-                bytes = frames.get(counter);
-                if (bytes == null) {
-                    counter++;
-                    return;
-                }
-            }
+        if (frames == null || frames.isEmpty()) {
+            logger.info("Empty frames, nothing to play...");
+            return;
+        }
 
-            speaker.write(bytes, 0, bytes.length);
+        try {
+            int index = (int) (counter % frames.size());
+            Voice voice = frames.get(index);
+
+            for (int i = 10; i < 100; i += 10) {
+                if (isGoodFrame(voice, counter)) {
+                    speaker.write(voice.getFrame(), 0, voice.getFrame().length);
+                    break;
+                }
+                logger.info(String.format("wait %dms frame %d", i, counter));
+                Thread.sleep(i);
+                index = (int) (counter % frames.size());
+                voice = frames.get(index);
+            }
             counter++;
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isGoodFrame(Voice voice, long counter) {
+        return voice != null && voice.getNumber() == counter;
     }
 
     @Override
@@ -63,7 +76,9 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         speaker.stop();
         speaker.close();
         counter = 0;
-        frames.clear();
+        for (int i = 0; i < frames.size(); i++) {
+            frames.set(i, null);
+        }
     }
 
 }

@@ -2,61 +2,48 @@ package ru.ifmo.baev.network.client;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.ifmo.baev.network.AbstractProcessor;
-import ru.ifmo.baev.network.message.MessageContainer;
+import ru.ifmo.baev.network.message.Voice;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Queue;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
  *         Date: 24.04.14
  */
-public class ClientVoiceSender extends AbstractProcessor {
+public class ClientVoiceSender {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    private static final long CHECK_TIMEOUT = 10;
+    private DatagramSocket socket;
 
-    private final Queue<MessageContainer> outgoing;
-
-    public ClientVoiceSender(Queue<MessageContainer> outgoing) {
-        this.outgoing = outgoing;
+    public ClientVoiceSender() throws SocketException {
+        socket = new DatagramSocket();
     }
 
-    @Override
-    public void run() {
+    public void send(Voice voice, InetAddress address, int port) {
 
-        DatagramSocket socket;
         try {
-            socket = new DatagramSocket();
-        } catch (SocketException e) {
+            byte[] bytes = voice.toBytes();
+            socket.send(new DatagramPacket(
+                    bytes,
+                    bytes.length,
+                    address,
+                    port
+
+            ));
+
+            logger.info("send frame");
+        } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
+    }
 
-        while (isRunning()) {
-            try {
-                if (outgoing.isEmpty()) {
-                    Thread.sleep(CHECK_TIMEOUT);
-                    continue;
-                }
-                MessageContainer container = outgoing.poll();
-                byte[] bytes = container.getMessage().toBytes();
-                socket.send(new DatagramPacket(
-                        bytes,
-                        bytes.length,
-                        container.getAddress(),
-                        container.getPort()
-
-                ));
-
-                logger.info("send frame");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public void close() {
+        if (socket != null) {
+            socket.close();
         }
     }
 }

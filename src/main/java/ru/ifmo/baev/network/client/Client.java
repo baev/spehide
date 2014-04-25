@@ -10,11 +10,7 @@ import ru.ifmo.baev.network.task.Task;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -23,7 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Client {
 
-    private Config config = new Config();
+    private static final Config config = new Config();
 
     private ClientData data;
 
@@ -35,9 +31,7 @@ public class Client {
 
     private Queue<MessageContainer> outgoing = new ConcurrentLinkedQueue<>();
 
-    private Queue<MessageContainer> myVoice = new ConcurrentLinkedQueue<>();
-
-    private Map<Long, byte[]> incomingVoice = new ConcurrentHashMap<>();
+    private List<Voice> incomingVoice = new ArrayList<>(Collections.<Voice>nCopies(10000, null));
 
     private List<AbstractProcessor> processors = new ArrayList<>();
 
@@ -95,9 +89,8 @@ public class Client {
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new TCPSender(outgoing));
         processors.add(new AliveNotifier(data));
-        processors.add(new VoiceRecorder(data, myVoice));
+        processors.add(new VoiceRecorder(data));
         processors.add(new VoicePlayer(data, incomingVoice));
-        processors.add(new ClientVoiceSender(myVoice));
 
         for (AbstractProcessor processor : processors) {
             processor.start();
