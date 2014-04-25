@@ -35,6 +35,7 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         speaker.open();
         speaker.start();
         counter = 0;
+        Thread.sleep(1000);
     }
 
     @Override
