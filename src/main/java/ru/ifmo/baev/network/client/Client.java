@@ -10,8 +10,12 @@ import ru.ifmo.baev.network.task.Task;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -32,6 +36,8 @@ public class Client {
     private Queue<MessageContainer> outgoing = new ConcurrentLinkedQueue<>();
 
     private List<Voice> incomingVoice = new ArrayList<>(Collections.<Voice>nCopies(10000, null));
+
+    private AtomicLong lastVoiceNum = new AtomicLong(-1);
 
     private List<AbstractProcessor> processors = new ArrayList<>();
 
@@ -85,12 +91,12 @@ public class Client {
         }
         running = true;
         processors.add(new ClientTCPReceiver(tasks));
-        processors.add(new ClientUDPReceiver(data, tasks, incomingVoice));
+        processors.add(new ClientUDPReceiver(data, tasks, incomingVoice, lastVoiceNum));
         processors.add(new MessageProcessor<>(data, tasks, outgoing));
         processors.add(new TCPSender(outgoing));
         processors.add(new AliveNotifier(data));
         processors.add(new VoiceRecorder(data));
-        processors.add(new VoicePlayer(data, incomingVoice));
+        processors.add(new VoicePlayer(data, incomingVoice, lastVoiceNum));
 
         for (AbstractProcessor processor : processors) {
             processor.start();

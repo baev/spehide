@@ -9,6 +9,7 @@ import ru.ifmo.baev.network.message.Voice;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -24,9 +25,12 @@ public class VoicePlayer extends AbstractVoiceProcessor {
 
     private SourceDataLine speaker;
 
-    protected VoicePlayer(ClientData data, List<Voice> frames) {
+    private AtomicLong last;
+
+    protected VoicePlayer(ClientData data, List<Voice> frames, AtomicLong last) {
         super(data);
         this.frames = frames;
+        this.last = last;
     }
 
     @Override
@@ -43,6 +47,14 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         if (frames == null || frames.isEmpty()) {
             logger.info("Empty frames, nothing to play...");
             return;
+        }
+        if (last.get() == -1) {
+            return;
+        }
+
+        if (last.get() - counter > 100) {
+            logger.info("normalize delay...");
+            counter = last.get();
         }
 
         try {

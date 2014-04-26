@@ -11,6 +11,7 @@ import ru.ifmo.baev.network.task.Task;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Dmitry Baev charlie@yandex-team.ru
@@ -26,11 +27,14 @@ public class ClientUDPReceiver extends AbstractUDPReceiver {
 
     private ClientData data;
 
-    protected ClientUDPReceiver(ClientData data, Queue<Task> tasks, List<Voice> incomingVoice) {
+    private AtomicLong last;
+
+    protected ClientUDPReceiver(ClientData data, Queue<Task> tasks, List<Voice> incomingVoice, AtomicLong last) {
         super(tasks);
         port = new Config().getClientUDPPort();
         this.incomingVoice = incomingVoice;
         this.data = data;
+        this.last = last;
     }
 
     @Override
@@ -49,6 +53,7 @@ public class ClientUDPReceiver extends AbstractUDPReceiver {
                 if (old == null || old.getNumber() < voice.getNumber()) {
                     logger.info("received " + voice.getNumber());
                     incomingVoice.set(index, voice);
+                    last.set(Math.max(last.get(), voice.getNumber()));
                 } else {
                     logger.info("received bad frame");
                 }
