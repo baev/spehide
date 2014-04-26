@@ -54,6 +54,7 @@ public class VoicePlayer extends AbstractVoiceProcessor {
                     speaker.write(voice.getFrame(), 0, voice.getFrame().length);
                     break;
                 }
+                logger.info("wait " + i + "ms " + counter);
                 Thread.sleep(i);
                 index = (int) (counter % frames.size());
                 voice = frames.get(index);
