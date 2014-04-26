@@ -39,7 +39,6 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         speaker.open();
         speaker.start();
         counter = 0;
-        Thread.sleep(1000);
     }
 
     @Override
@@ -90,6 +89,7 @@ public class VoicePlayer extends AbstractVoiceProcessor {
         for (int i = 0; i < frames.size(); i++) {
             frames.set(i, null);
         }
+        last.set(-1);
     }
 
 }
